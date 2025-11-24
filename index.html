@@ -312,7 +312,11 @@
     <p>© <span id="year"></span> Riankiamado</p>
   </div>
 </footer>
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>
 
+</body>
 <script>
   function openModal(name, price, desc, images, link) {
   document.getElementById("modalName").innerText = name;
