@@ -326,7 +326,16 @@ Silakan isi data berikut:
 Nama: [isi nama Anda]
 Alamat: [isi alamat lengkap]
 Warna: ${color}
-Ukuran: ${size}`;
+Ukuran: ${size}
+
+Metode pembayaran: Transfer Bank
+Silakan transfer ke rekening berikut:
+Bank BCA
+No. Rekening: 1234567890
+a.n. YR STORE
+
+Setelah transfer, kirim bukti pembayaran di sini.`;
+
 
     const encoded = encodeURIComponent(message);
     document.getElementById("modalBuy").href = `${link}&text=${encoded}`;
