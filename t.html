@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YRGN22 STORE</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f4f6f9;
+    }
+
+    header {
+      background: #2c3e50;
+      color: white;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 15px;
+    }
+
+    header img {
+      height: 50px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .controls {
+      padding: 20px;
+      text-align: center;
+    }
+
+    .controls input, .controls select {
+      padding: 10px;
+      font-size: 16px;
+      margin: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .product-card {
+      width: 280px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      margin: 15px;
+      overflow: hidden;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: scale(1.03);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 15px;
+    }
+
+    .product-info h3 {
+      margin: 0;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .product-info p {
+      margin: 5px 0;
+      color: #666;
+    }
+
+    .category {
+      display: inline-block;
+      background: #3498db;
+      color: white;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    .buy-btn {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 10px 15px;
+      background: #25D366;
+      color: white;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .buy-btn:hover {
+      background: #128C7E;
+    }
+
+    /* Popup Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      margin: 10% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      position: relative;
+    }
+
+    .modal-content img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      margin-bottom: 15px;
+    }
+
+    .close {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: red;
+    }
+
+    .select-box {
+      margin: 10px 0;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    @media screen and (max-width: 600px) {
+      .product-card {
+        width: 90%;
+      }
+      .controls input, .controls select {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <img src="Logo/Logo Yrgn.png" alt="Logo Toko Online">
+    <h1>YRGN22 STORE</h1>
+  </header>
+
+  <!-- Search & Filter -->
+  <div class="controls">
+    <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Cari produk berdasarkan nama...">
+    <select id="categorySelect" onchange="filterProducts()">
+      <option value="all">Semua Kategori</option>
+      <option value="Pakaian">Pakaian</option>
+      <option value="Sepatu">Sepatu</option>
+    </select>
+  </div>
+
+  <!-- Produk -->
+<div class="container" id="productContainer">
+
+  <!-- Produk 1 -->
+  <div class="product-card" 
+       data-name="Kaos Polos" 
+       data-category="Pakaian"
+       onclick="openModal(
+         'Kaos Polos',
+         'Rp 75.000',
+         'Kaos polos bahan katun premium, nyaman dipakai sehari-hari.',
+         {
+           'Merah':'Barang/Merah.png',
+           'Hitam':'Barang/Hitam.png',
+           'Putih':'Barang/Putih.png'
+         },
+         'https://wa.me/6281234567890?text=Halo%20saya%20ingin%20beli%20Kaos%20Polos'
+       )">
+    <img src="Barang/baju.jpg" alt="Kaos Polos">
+    <div class="product-info">
+      <span class="category">Pakaian</span>
+      <h3>Kaos Polos</h3>
+      <p>Rp 75.000</p>
+    </div>
+  </div>
+
+  <!-- Produk 2 -->
+  <div class="product-card" 
+       data-name="Sepatu Sneakers" 
+       data-category="Sepatu"
+       onclick="openModal(
+         'Sepatu Sneakers',
+         'Rp 250.000',
+         'Sepatu sneakers trendy, cocok untuk jalan santai maupun olahraga.',
+         {
+           'Hitam':'Barang/celana hitam.png',
+           'Putih':'Barang/celana putih.png',
+           'Biru':'Barang/Celana biru.png'
+         },
+         'https://wa.me/6281234567890?text=Halo%20saya%20ingin%20beli%20Sepatu%20Sneakers'
+       )">
+    <img src="Barang/celana.jpg" alt="Sepatu Sneakers">
+    <div class="product-info">
+      <span class="category">Sepatu</span>
+      <h3>Sepatu Sneakers</h3>
+      <p>Rp 250.000</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div id="productModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img id="modalImage" src="" alt="Produk">
+    <h2 id="modalName"></h2>
+    <p id="modalPrice"></p>
+    <p id="modalDesc"></p>
+
+    <!-- Pilihan Warna -->
+    <label for="colorSelect">Pilih Warna:</label>
+    <select id="colorSelect" class="select-box"></select>
+
+    <!-- Pilihan Ukuran -->
+    <label for="sizeSelect">Pilih Ukuran:</label>
+    <select id="sizeSelect" class="select-box">
+      <option value="S">S</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+    </select>
+
+    <!-- Pesan konfirmasi -->
+    <p id="confirmationText" style="margin-top:10px; font-weight:bold; color:#333;"></p>
+
+    <a id="modalBuy" class="buy-btn" href="#" target="_blank">Beli via WhatsApp</a>
+  </div>
+</div>
+
+<script>
+  function openModal(name, price, desc, images, link) {
+    document.getElementById("modalName").innerText = name;
+    document.getElementById("modalPrice").innerText = price;
+    document.getElementById("modalDesc").innerText = desc;
+
+    const colorSelect = document.getElementById("colorSelect");
+    colorSelect.innerHTML = "";
+
+    // isi dropdown warna dari key object images
+    Object.keys(images).forEach(color => {
+      const option = document.createElement("option");
+      option.value = color;
+      option.text = color;
+      colorSelect.appendChild(option);
+    });
+
+    // fungsi update gambar, link & konfirmasi
+    function updatePreview() {
+      const color = colorSelect.value;
+      const size = document.getElementById("sizeSelect").value;
+      document.getElementById("modalImage").src = images[color];
+      document.getElementById("modalBuy").href =
+        link + "%20warna%20" + color + "%20ukuran%20" + size;
+      document.getElementById("confirmationText").innerText =
+        "Anda memilih warna: " + color + " | ukuran: " + size;
+    }
+
+    // event listener
+    colorSelect.onchange = updatePreview;
+    document.getElementById("sizeSelect").onchange = updatePreview;
+
+    // set default preview
+    colorSelect.value = Object.keys(images)[0];
+    updatePreview();
+
+    document.getElementById("productModal").style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById("productModal").style.display = "none";
+  }
+
+  window.onclick = function(event) {
+    const modal = document.getElementById("productModal");
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  }
+
+  // Fungsi filter produk (search + kategori)
+  function filterProducts() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+    const selectedCategory = document.getElementById("categorySelect").value;
+    const cards = document.querySelectorAll(".product-card");
+
+    cards.forEach(card => {
+      const name = card.getAttribute("data-name").toLowerCase();
+      const category = card.getAttribute("data-category");
+      const matchName = name.includes(searchInput);
+      const matchCategory = selectedCategory === "all" || category === selectedCategory;
+      card.style.display = matchName && matchCategory ? "block" : "none";
+    });
+  }
+</script>
