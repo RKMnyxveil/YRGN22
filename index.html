@@ -282,7 +282,8 @@
     <!-- Pesan konfirmasi -->
     <p id="confirmationText" style="margin-top:10px; font-weight:bold; color:#333;"></p>
 
-    <a id="modalBuy" class="buy-btn" href="#" target="_blank">Beli via WhatsApp</a>
+    <!-- <a id="modalBuy" class="buy-btn" href="#" target="_blank">Beli via WhatsApp</a> -->
+     <a id="modalBuy" class="buy-btn" href="#" target="_blank">Beli via WhatsApp</a>
   </div>
 </div>
 
@@ -350,4 +351,20 @@
       card.style.display = matchName && matchCategory ? "block" : "none";
     });
   }
+
+  function updatePreview() {
+  const color = colorSelect.value;
+  const size = document.getElementById("sizeSelect").value;
+  const message = `Halo saya ingin beli ${name}.
+Silakan isi data berikut:
+Nama: [isi nama Anda]
+Alamat: [isi alamat lengkap]
+Warna: ${color}
+Ukuran: ${size}`;
+  const encoded = encodeURIComponent(message);
+  document.getElementById("modalBuy").href = `https://wa.me/6282223108015?text=${encoded}`;
+  document.getElementById("confirmationText").innerText =
+    "Anda memilih warna: " + color + " | ukuran: " + size;
+}
+
 </script>
