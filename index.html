@@ -353,18 +353,21 @@
   }
 
   function updatePreview() {
-  const color = colorSelect.value;
+  const color = document.getElementById("colorSelect").value;
   const size = document.getElementById("sizeSelect").value;
+  const name = document.getElementById("modalName").innerText;
+
   const message = `Halo saya ingin beli ${name}.
 Silakan isi data berikut:
 Nama: [isi nama Anda]
 Alamat: [isi alamat lengkap]
 Warna: ${color}
 Ukuran: ${size}`;
+
   const encoded = encodeURIComponent(message);
   document.getElementById("modalBuy").href = `https://wa.me/6282223108015?text=${encoded}`;
   document.getElementById("confirmationText").innerText =
-    "Anda memilih warna: " + color + " | ukuran: " + size;
+    `Anda memilih warna: ${color} | ukuran: ${size}`;
 }
 
 </script>
