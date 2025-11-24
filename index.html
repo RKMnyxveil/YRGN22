@@ -289,85 +289,58 @@
 
 <script>
   function openModal(name, price, desc, images, link) {
-    document.getElementById("modalName").innerText = name;
-    document.getElementById("modalPrice").innerText = price;
-    document.getElementById("modalDesc").innerText = desc;
+  document.getElementById("modalName").innerText = name;
+  document.getElementById("modalPrice").innerText = price;
+  document.getElementById("modalDesc").innerText = desc;
 
-    const colorSelect = document.getElementById("colorSelect");
-    colorSelect.innerHTML = "";
+  const colorSelect = document.getElementById("colorSelect");
+  colorSelect.innerHTML = "";
 
-    // isi dropdown warna dari key object images
-    Object.keys(images).forEach(color => {
-      const option = document.createElement("option");
-      option.value = color;
-      option.text = color;
-      colorSelect.appendChild(option);
-    });
+  // Isi dropdown warna dari object images
+  Object.keys(images).forEach(color => {
+    const option = document.createElement("option");
+    option.value = color;
+    option.text = color;
+    colorSelect.appendChild(option);
+  });
 
-    // fungsi update gambar, link & konfirmasi
-    function updatePreview() {
-      const color = colorSelect.value;
-      const size = document.getElementById("sizeSelect").value;
-      document.getElementById("modalImage").src = images[color];
-      document.getElementById("modalBuy").href =
-        link + "%20warna%20" + color + "%20ukuran%20" + size;
-      document.getElementById("confirmationText").innerText =
-        "Anda memilih warna: " + color + " | ukuran: " + size;
-    }
+  // Set default warna
+  colorSelect.value = Object.keys(images)[0];
 
-    // event listener
-    colorSelect.onchange = updatePreview;
-    document.getElementById("sizeSelect").onchange = updatePreview;
-
-    // set default preview
-    colorSelect.value = Object.keys(images)[0];
-    updatePreview();
-
-    document.getElementById("productModal").style.display = "block";
-  }
-
-  function closeModal() {
-    document.getElementById("productModal").style.display = "none";
-  }
-
-  window.onclick = function(event) {
-    const modal = document.getElementById("productModal");
-    if (event.target === modal) {
-      modal.style.display = "none";
-    }
-  }
-
-  // Fungsi filter produk (search + kategori)
-  function filterProducts() {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
-    const selectedCategory = document.getElementById("categorySelect").value;
-    const cards = document.querySelectorAll(".product-card");
-
-    cards.forEach(card => {
-      const name = card.getAttribute("data-name").toLowerCase();
-      const category = card.getAttribute("data-category");
-      const matchName = name.includes(searchInput);
-      const matchCategory = selectedCategory === "all" || category === selectedCategory;
-      card.style.display = matchName && matchCategory ? "block" : "none";
-    });
-  }
-
+  // Fungsi update gambar, konfirmasi, dan link WhatsApp
   function updatePreview() {
-  const color = document.getElementById("colorSelect").value;
-  const size = document.getElementById("sizeSelect").value;
-  const name = document.getElementById("modalName").innerText;
+    const color = colorSelect.value;
+    const size = document.getElementById("sizeSelect").value;
+    const imageUrl = images[color];
 
-  const message = `Halo saya ingin beli ${name}.
+    // Update gambar preview
+    document.getElementById("modalImage").src = imageUrl;
+
+    // Update konfirmasi
+    document.getElementById("confirmationText").innerText =
+      `Anda memilih warna: ${color} | ukuran: ${size}`;
+
+    // Buat pesan WhatsApp
+    const message = `Halo saya ingin beli ${name}.
 Silakan isi data berikut:
 Nama: [isi nama Anda]
 Alamat: [isi alamat lengkap]
 Warna: ${color}
 Ukuran: ${size}`;
 
-  const encoded = encodeURIComponent(message);
-  document.getElementById("modalBuy").href = `https://wa.me/6282223108015?text=${encoded}`;
-  document.getElementById("confirmationText").innerText =
-    `Anda memilih warna: ${color} | ukuran: ${size}`;
+    const encoded = encodeURIComponent(message);
+    document.getElementById("modalBuy").href = `${link}&text=${encoded}`;
+  }
+
+  // Event listener
+  colorSelect.onchange = updatePreview;
+  document.getElementById("sizeSelect").onchange = updatePreview;
+
+  // Set awal
+  updatePreview();
+
+  // Tampilkan modal
+  document.getElementById("productModal").style.display = "block";
 }
 
 </script>
