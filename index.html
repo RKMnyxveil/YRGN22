@@ -3,28 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YRGN22 STORE</title>
+  <title>YRGN22 STORE - Premium</title>
   <style>
-    /* --- CSS UTAMA --- */
+    /* --- 1. RESET & BASIC --- */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f0f2f5;
+      background-color: #f8f9fa; /* Background lebih terang/bersih */
       color: #333;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    /* --- STICKY NAV WRAPPER (BARU) --- */
-    /* Ini wadah pembungkus Header & Controls agar menempel bersamaan */
+    /* --- 2. STICKY NAVIGATION WRAPPER --- */
+    /* Ini kunci agar Header & Search menempel saat scroll */
     .sticky-nav {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background-color: #f0f2f5; /* Warna background agar tidak transparan saat discroll */
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      background-color: rgba(255, 255, 255, 0.95); /* Efek agak transparan modern */
+      backdrop-filter: blur(10px); /* Efek blur di belakang menu */
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      padding-bottom: 10px;
     }
 
     /* --- HEADER --- */
@@ -35,7 +37,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      /* position: sticky; <-- DIHAPUS, dipindah ke .sticky-nav */
     }
 
     .logo-container {
@@ -62,36 +63,33 @@
       letter-spacing: 1px;
     }
 
-    /* --- CONTROLS (Pencarian) --- */
+    /* --- CONTROLS (Pencarian Modern) --- */
     .controls {
-      background: white;
-      padding: 15px 20px;
+      padding: 15px 20px 5px 20px; /* Padding bawah dikurangi */
       text-align: center;
       display: flex;
       justify-content: center;
       gap: 10px;
       flex-wrap: wrap;
-      /* Margin bottom dihapus agar menyatu dengan container produk saat scroll */
-      margin-bottom: 0; 
-      border-bottom: 1px solid #ddd;
     }
 
     .controls input, .controls select {
-      padding: 10px 15px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+      padding: 12px 20px;
+      font-size: 15px;
+      border-radius: 50px; /* Input membulat modern */
+      border: 1px solid #e0e0e0;
       outline: none;
       transition: all 0.3s;
+      background: #f9f9f9;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
     }
 
-    .controls input {
-      width: 300px;
-    }
-
+    .controls input { width: 320px; }
+    
     .controls input:focus, .controls select:focus {
       border-color: #3498db;
-      box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+      background: #fff;
+      box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
     }
 
     /* --- CONTAINER PRODUK --- */
@@ -99,65 +97,134 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 25px;
-      padding: 30px 20px 20px 20px; /* Tambah padding atas agar tidak tertutup nav */
-      max-width: 1200px;
+      gap: 30px; /* Jarak antar kartu lebih lega */
+      padding: 40px 20px;
+      max-width: 1280px;
       margin: 0 auto;
     }
 
-    /* --- KARTU PRODUK --- */
+    /* --- 3. PRODUCT CARD (DESAIN BARU) --- */
     .product-card {
-      background: #fff;
-      width: 260px;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      background: #ffffff;
+      width: 280px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Bayangan halus */
       overflow: hidden;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek membal halus */
       cursor: pointer;
       display: flex;
       flex-direction: column;
+      position: relative;
+      border: 1px solid #f0f0f0;
     }
 
     .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 20px rgba(0,0,0,0.15);
+      transform: translateY(-10px); /* Naik saat hover */
+      box-shadow: 0 20px 35px rgba(0,0,0,0.12);
+      border-color: #3498db;
+    }
+
+    /* Wrapper Gambar untuk Zoom */
+    .img-wrapper {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      position: relative;
     }
 
     .product-card img {
       width: 100%;
-      height: 200px;
+      height: 100%;
       object-fit: cover;
-      background-color: #eee;
+      transition: transform 0.6s ease;
     }
 
-    .product-info {
-      padding: 15px;
-      text-align: left;
+    .product-card:hover img {
+      transform: scale(1.12); /* Zoom gambar */
     }
 
-    .category-badge {
-      display: inline-block;
-      background: #e1f0fa;
-      color: #2980b9;
-      padding: 4px 10px;
+    /* Badge Label (Pojok Kiri Atas) */
+    .badge {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      background: #ff6b6b;
+      color: white;
+      padding: 5px 12px;
       border-radius: 20px;
-      font-size: 11px;
-      font-weight: bold;
-      margin-bottom: 8px;
+      font-size: 10px;
+      font-weight: 800;
       text-transform: uppercase;
+      letter-spacing: 1px;
+      z-index: 2;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .badge.blue { background: #4ecdc4; }
+    .badge.purple { background: #a55eea; }
+
+    /* Info Produk */
+    .product-info {
+      padding: 20px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .category-text {
+      font-size: 11px;
+      color: #95a5a6;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 700;
+      margin-bottom: 5px;
     }
 
     .product-info h3 {
-      margin: 0 0 5px 0;
-      font-size: 18px;
+      margin: 0 0 8px 0;
+      font-size: 17px;
       color: #2c3e50;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .rating {
+      color: #f1c40f;
+      font-size: 14px;
+      margin-bottom: 15px;
+    }
+
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      border-top: 1px solid #f5f5f5;
+      padding-top: 15px;
     }
 
     .price {
-      font-size: 16px;
-      color: #e67e22;
-      font-weight: bold;
+      font-size: 18px;
+      color: #27ae60;
+      font-weight: 800;
       margin: 0;
+    }
+
+    .action-btn {
+      background: #f0f2f5;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2c3e50;
+      transition: all 0.3s;
+      font-size: 14px;
+    }
+    .product-card:hover .action-btn {
+      background: #2c3e50;
+      color: white;
     }
 
     /* --- PAGINATION --- */
@@ -166,24 +233,26 @@
       justify-content: center;
       gap: 10px;
       padding: 20px;
-      margin-bottom: 30px;
+      margin-bottom: 40px;
       flex: 1;
     }
 
     .page-btn {
       background: white;
-      border: 1px solid #ddd;
-      color: #333;
-      padding: 10px 15px;
+      border: 1px solid #eee;
+      color: #555;
+      padding: 10px 18px;
       cursor: pointer;
-      border-radius: 5px;
+      border-radius: 8px; /* Tombol kotak membulat */
       transition: all 0.3s;
-      font-weight: bold;
+      font-weight: 600;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
     .page-btn:hover {
-      background: #f1f1f1;
-      border-color: #ccc;
+      background: #f8f9fa;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     }
 
     .page-btn.active {
@@ -193,39 +262,40 @@
     }
 
     .page-btn:disabled {
-      background: #eee;
-      color: #aaa;
+      background: #f0f0f0;
+      color: #bbb;
       cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
     /* --- MODAL --- */
     .modal {
       display: none;
       position: fixed;
-      z-index: 2000; /* Z-index harus lebih tinggi dari navbar (1000) */
+      z-index: 2000;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
-      overflow: auto;
       background-color: rgba(0,0,0,0.6);
-      backdrop-filter: blur(5px);
+      backdrop-filter: blur(8px);
     }
 
     .modal-content {
       background-color: #fff;
       margin: 5% auto;
-      padding: 25px;
-      border-radius: 15px;
+      padding: 30px;
+      border-radius: 20px;
       width: 90%;
       max-width: 450px;
       text-align: center;
       position: relative;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
-      animation: fadeIn 0.3s;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+      animation: zoomIn 0.3s;
     }
 
-    @keyframes fadeIn {
+    @keyframes zoomIn {
       from { opacity: 0; transform: scale(0.9); }
       to { opacity: 1; transform: scale(1); }
     }
@@ -234,60 +304,49 @@
       width: 100%;
       height: 250px;
       object-fit: cover;
-      border-radius: 10px;
-      margin-bottom: 15px;
+      border-radius: 15px;
+      margin-bottom: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .close {
       position: absolute;
-      top: 15px;
-      right: 20px;
+      top: 20px;
+      right: 25px;
       font-size: 28px;
-      font-weight: bold;
       color: #999;
       cursor: pointer;
+      transition: color 0.3s;
     }
-
-    .close:hover {
-      color: #e74c3c;
-    }
+    .close:hover { color: #e74c3c; }
 
     .select-box {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       margin: 8px 0 15px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
       background: #f9f9f9;
-    }
-
-    label {
-      display: block;
-      text-align: left;
-      font-weight: 600;
-      margin-top: 10px;
-      font-size: 14px;
-      color: #555;
     }
 
     .buy-btn {
       display: block;
       width: 100%;
       box-sizing: border-box;
-      margin-top: 20px;
-      padding: 14px;
+      margin-top: 25px;
+      padding: 15px;
       background: #25D366;
       color: white;
-      border-radius: 8px;
+      border-radius: 50px;
       text-decoration: none;
       font-weight: bold;
       font-size: 16px;
-      transition: background 0.3s;
-      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4);
+      transition: background 0.3s, transform 0.2s;
+      box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
     }
-
     .buy-btn:hover {
       background: #128C7E;
+      transform: translateY(-2px);
     }
 
     /* --- FOOTER --- */
@@ -295,19 +354,15 @@
       background-color: #2c3e50;
       color: rgba(255,255,255,0.7);
       text-align: center;
-      padding: 20px;
+      padding: 30px 20px;
       font-size: 14px;
       margin-top: auto;
     }
 
     @media screen and (max-width: 600px) {
-      .controls input, .controls select, .product-card {
-        width: 100%;
-      }
-      .controls {
-        flex-direction: column;
-      }
-      header { justify-content: center; }
+      .controls input, .controls select { width: 100%; }
+      .product-card { width: 100%; }
+      .container { padding: 20px; }
     }
   </style>
 </head>
@@ -334,135 +389,203 @@
   </div>
 
   <div class="container" id="productContainer">
-    <div class="product-card" data-name="Kaos Polos" data-category="Pakaian" onclick="openModal('Kaos Polos','Rp 75.000','Kaos nyaman.',{'Hitam':'Barang/Hitam.png'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kaos+1'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Kaos Polos 1</h3><p class="price">Rp 75.000</p></div>
-    </div>
-    <div class="product-card" data-name="Sepatu Sneakers" data-category="Sepatu" onclick="openModal('Sepatu Sneakers','Rp 250.000','Sepatu keren.',{'Hitam':'Barang/celana.jpg'},'')">
-      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sepatu+2'">
-      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Sneakers 2</h3><p class="price">Rp 250.000</p></div>
-    </div>
-    <div class="product-card" data-name="Sepatu Sport" data-category="Sepatu" onclick="openModal('Sepatu Sport','Rp 300.000','Sepatu lari.',{'Biru':'Barang/Biru.jpg'},'')">
-      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sepatu+3'">
-      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Sport 3</h3><p class="price">Rp 300.000</p></div>
-    </div>
-    <div class="product-card" data-name="Kemeja Flanel" data-category="Pakaian" onclick="openModal('Kemeja Flanel','Rp 150.000','Kemeja kotak.',{'Merah':'Barang/Merah.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kemeja+4'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Kemeja Flanel 4</h3><p class="price">Rp 150.000</p></div>
-    </div>
-    <div class="product-card" data-name="Jaket Denim" data-category="Pakaian" onclick="openModal('Jaket Denim','Rp 200.000','Jaket Jeans.',{'Biru':'Barang/Biru.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Jaket+5'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Jaket Denim 5</h3><p class="price">Rp 200.000</p></div>
-    </div>
-    <div class="product-card" data-name="Topi Baseball" data-category="Pakaian" onclick="openModal('Topi Baseball','Rp 50.000','Topi keren.',{'Hitam':'Barang/Hitam.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Topi+6'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Topi Baseball 6</h3><p class="price">Rp 50.000</p></div>
-    </div>
-    <div class="product-card" data-name="Sepatu Formal" data-category="Sepatu" onclick="openModal('Sepatu Formal','Rp 400.000','Sepatu kulit.',{'Coklat':'Barang/Coklat.jpg'},'')">
-      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sepatu+7'">
-      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Formal 7</h3><p class="price">Rp 400.000</p></div>
-    </div>
-    <div class="product-card" data-name="Kaos Oversize" data-category="Pakaian" onclick="openModal('Kaos Oversize','Rp 85.000','Kaos besar.',{'Putih':'Barang/Putih.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kaos+8'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Kaos Oversize 8</h3><p class="price">Rp 85.000</p></div>
-    </div>
-    <div class="product-card" data-name="Celana Chino" data-category="Pakaian" onclick="openModal('Celana Chino','Rp 120.000','Celana panjang.',{'Krem':'Barang/Krem.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Celana+9'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Celana Chino 9</h3><p class="price">Rp 120.000</p></div>
-    </div>
-    <div class="product-card" data-name="Sepatu Sandal" data-category="Sepatu" onclick="openModal('Sepatu Sandal','Rp 90.000','Sandal gunung.',{'Hitam':'Barang/Hitam.jpg'},'')">
-      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sandal+10'">
-      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Sandal 10</h3><p class="price">Rp 90.000</p></div>
-    </div>
-    <div class="product-card" data-name="Hoodie Polos" data-category="Pakaian" onclick="openModal('Hoodie Polos','Rp 175.000','Hoodie hangat.',{'Abu':'Barang/Abu.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Hoodie+11'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Hoodie Polos 11</h3><p class="price">Rp 175.000</p></div>
-    </div>
-    <div class="product-card" data-name="Vest Rajut" data-category="Pakaian" onclick="openModal('Vest Rajut','Rp 60.000','Rompi rajut.',{'Krem':'Barang/Krem.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Vest+12'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Vest Rajut 12</h3><p class="price">Rp 60.000</p></div>
+
+    <div class="product-card" data-name="Kaos Polos" data-category="Pakaian" onclick="openModal('Kaos Polos','Rp 75.000','Bahan Cotton Combed 30s adem.',{'Hitam':'Barang/Hitam.png','Putih':'Barang/Putih.png'},'')">
+      <span class="badge">Terlaris</span>
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Kaos+Polos'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Kaos Polos Premium</h3>
+        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
+        <div class="price-row"><p class="price">Rp 75.000</p><div class="action-btn">➔</div></div>
+      </div>
     </div>
 
-    <div class="product-card" data-name="Celana Jeans" data-category="Pakaian" onclick="openModal('Celana Jeans','Rp 180.000','Jeans Slimfit.',{'Biru':'Barang/Biru.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Jeans+13'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Celana Jeans 13</h3><p class="price">Rp 180.000</p></div>
-    </div>
-    <div class="product-card" data-name="Topi Kupluk" data-category="Pakaian" onclick="openModal('Topi Kupluk','Rp 45.000','Beanie hat.',{'Hitam':'Barang/Hitam.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kupluk+14'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Topi Kupluk 14</h3><p class="price">Rp 45.000</p></div>
-    </div>
-    <div class="product-card" data-name="Sepatu Boots" data-category="Sepatu" onclick="openModal('Sepatu Boots','Rp 350.000','Boots kulit.',{'Coklat':'Barang/Coklat.jpg'},'')">
-      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Boots+15'">
-      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Boots 15</h3><p class="price">Rp 350.000</p></div>
-    </div>
-    <div class="product-card" data-name="Jaket Bomber" data-category="Pakaian" onclick="openModal('Jaket Bomber','Rp 220.000','Jaket tebal.',{'Hijau':'Barang/Hijau.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Bomber+16'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Jaket Bomber 16</h3><p class="price">Rp 220.000</p></div>
-    </div>
-    <div class="product-card" data-name="Kaos Oversize" data-category="Pakaian" onclick="openModal('Kaos Oversize','Rp 85.000','Kaos besar.',{'Putih':'Barang/Putih.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kaos+8'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Kaos Oversize 8</h3><p class="price">Rp 85.000</p></div>
-    </div>
-    <div class="product-card" data-name="Celana Chino" data-category="Pakaian" onclick="openModal('Celana Chino','Rp 120.000','Celana panjang.',{'Krem':'Barang/Krem.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Celana+9'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Celana Chino 9</h3><p class="price">Rp 120.000</p></div>
-    </div>
-    <div class="product-card" data-name="Sepatu Sandal" data-category="Sepatu" onclick="openModal('Sepatu Sandal','Rp 90.000','Sandal gunung.',{'Hitam':'Barang/Hitam.jpg'},'')">
-      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sandal+10'">
-      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Sandal 10</h3><p class="price">Rp 90.000</p></div>
-    </div>
-    <div class="product-card" data-name="Hoodie Polos" data-category="Pakaian" onclick="openModal('Hoodie Polos','Rp 175.000','Hoodie hangat.',{'Abu':'Barang/Abu.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Hoodie+11'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Hoodie Polos 11</h3><p class="price">Rp 175.000</p></div>
-    </div>
-    <div class="product-card" data-name="Vest Rajut" data-category="Pakaian" onclick="openModal('Vest Rajut','Rp 60.000','Rompi rajut.',{'Krem':'Barang/Krem.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Vest+12'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Vest Rajut 12</h3><p class="price">Rp 60.000</p></div>
+    <div class="product-card" data-name="Sepatu Sneakers" data-category="Sepatu" onclick="openModal('Sepatu Sneakers','Rp 250.000','Sneakers kekinian.',{'Hitam':'Barang/celana.jpg','Putih':'Barang/Putih.jpg'},'')">
+      <span class="badge blue">Baru</span>
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Sneakers'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Sneakers</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.8)</span></div>
+        <div class="price-row"><p class="price">Rp 250.000</p><div class="action-btn">➔</div></div>
+      </div>
     </div>
 
-    <div class="product-card" data-name="Celana Jeans" data-category="Pakaian" onclick="openModal('Celana Jeans','Rp 180.000','Jeans Slimfit.',{'Biru':'Barang/Biru.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Jeans+13'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Celana Jeans 13</h3><p class="price">Rp 180.000</p></div>
+    <div class="product-card" data-name="Sepatu Sport" data-category="Sepatu" onclick="openModal('Sepatu Sport','Rp 300.000','Cocok untuk lari.',{'Biru':'Barang/Biru.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Sepatu+Sport'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Sport Run</h3>
+        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
+        <div class="price-row"><p class="price">Rp 300.000</p><div class="action-btn">➔</div></div>
+      </div>
     </div>
-    <div class="product-card" data-name="Topi Kupluk" data-category="Pakaian" onclick="openModal('Topi Kupluk','Rp 45.000','Beanie hat.',{'Hitam':'Barang/Hitam.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kupluk+14'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Topi Kupluk 14</h3><p class="price">Rp 45.000</p></div>
+
+    <div class="product-card" data-name="Kemeja Flanel" data-category="Pakaian" onclick="openModal('Kemeja Flanel','Rp 150.000','Motif kotak-kotak.',{'Merah':'Barang/Merah.jpg'},'')">
+      <span class="badge purple">Promo</span>
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Flanel'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Kemeja Flanel</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.5)</span></div>
+        <div class="price-row"><p class="price">Rp 150.000</p><div class="action-btn">➔</div></div>
+      </div>
     </div>
-    <div class="product-card" data-name="Sepatu Boots" data-category="Sepatu" onclick="openModal('Sepatu Boots','Rp 350.000','Boots kulit.',{'Coklat':'Barang/Coklat.jpg'},'')">
-      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Boots+15'">
-      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Boots 15</h3><p class="price">Rp 350.000</p></div>
+
+    <div class="product-card" data-name="Jaket Denim" data-category="Pakaian" onclick="openModal('Jaket Denim','Rp 200.000','Bahan Jeans Tebal.',{'Biru':'Barang/Biru.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Jaket+Denim'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Jaket Denim Classic</h3>
+        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(4.9)</span></div>
+        <div class="price-row"><p class="price">Rp 200.000</p><div class="action-btn">➔</div></div>
+      </div>
     </div>
-    <div class="product-card" data-name="Jaket Bomber" data-category="Pakaian" onclick="openModal('Jaket Bomber','Rp 220.000','Jaket tebal.',{'Hijau':'Barang/Hijau.jpg'},'')">
-      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Bomber+16'">
-      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Jaket Bomber 16</h3><p class="price">Rp 220.000</p></div>
+
+    <div class="product-card" data-name="Topi Baseball" data-category="Pakaian" onclick="openModal('Topi Baseball','Rp 50.000','All size.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Topi'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Topi Baseball NY</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.2)</span></div>
+        <div class="price-row"><p class="price">Rp 50.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Formal" data-category="Sepatu" onclick="openModal('Sepatu Formal','Rp 400.000','Kulit asli.',{'Coklat':'Barang/Coklat.jpg'},'')">
+      <span class="badge">Premium</span>
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Pantofel'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Formal Pantofel</h3>
+        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
+        <div class="price-row"><p class="price">Rp 400.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Kaos Oversize" data-category="Pakaian" onclick="openModal('Kaos Oversize','Rp 85.000','Potongan longgar.',{'Putih':'Barang/Putih.jpg'},'')">
+      <span class="badge blue">Trend</span>
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Oversize'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Kaos Oversize Street</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.6)</span></div>
+        <div class="price-row"><p class="price">Rp 85.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Celana Chino" data-category="Pakaian" onclick="openModal('Celana Chino','Rp 120.000','Bahan stretch.',{'Krem':'Barang/Krem.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Chino'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Celana Chino Slim</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.4)</span></div>
+        <div class="price-row"><p class="price">Rp 120.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Sandal" data-category="Sepatu" onclick="openModal('Sepatu Sandal','Rp 90.000','Sandal gunung kuat.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Sandal'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Sandal Outdoor</h3>
+        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(4.8)</span></div>
+        <div class="price-row"><p class="price">Rp 90.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Hoodie Polos" data-category="Pakaian" onclick="openModal('Hoodie Polos','Rp 175.000','Fleece tebal.',{'Abu':'Barang/Abu.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Hoodie'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Hoodie Jumper Polos</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.7)</span></div>
+        <div class="price-row"><p class="price">Rp 175.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Vest Rajut" data-category="Pakaian" onclick="openModal('Vest Rajut','Rp 60.000','Korean style.',{'Krem':'Barang/Krem.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Vest'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Vest Rajut Korea</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.3)</span></div>
+        <div class="price-row"><p class="price">Rp 60.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Celana Jeans" data-category="Pakaian" onclick="openModal('Celana Jeans','Rp 180.000','Slim fit.',{'Biru':'Barang/Biru.jpg'},'')">
+      <span class="badge blue">Baru</span>
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Jeans'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Celana Jeans Pria</h3>
+        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(4.9)</span></div>
+        <div class="price-row"><p class="price">Rp 180.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Topi Kupluk" data-category="Pakaian" onclick="openModal('Topi Kupluk','Rp 45.000','Hangat dipakai.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Kupluk'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Topi Kupluk Beanie</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.5)</span></div>
+        <div class="price-row"><p class="price">Rp 45.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Boots" data-category="Sepatu" onclick="openModal('Sepatu Boots','Rp 350.000','Kulit sintetis.',{'Coklat':'Barang/Coklat.jpg'},'')">
+      <span class="badge">Limited</span>
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Boots'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Boots Klasik</h3>
+        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
+        <div class="price-row"><p class="price">Rp 350.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Jaket Bomber" data-category="Pakaian" onclick="openModal('Jaket Bomber','Rp 220.000','Anti angin.',{'Hijau':'Barang/Hijau.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Bomber'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Jaket Bomber Army</h3>
+        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.7)</span></div>
+        <div class="price-row"><p class="price">Rp 220.000</p><div class="action-btn">➔</div></div>
+      </div>
     </div>
 
   </div>
 
-  <div class="pagination-container" id="paginationControls">
-    </div>
+  <div class="pagination-container" id="paginationControls"></div>
 
   <div id="productModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
       <img id="modalImage" src="" alt="Produk">
       <h2 id="modalName"></h2>
-      <p id="modalPrice" style="color:#e67e22; font-weight:bold; font-size:18px;"></p>
-      <p id="modalDesc" style="color:#666; font-size:14px;"></p>
-      <label>Pilih Warna:</label>
-      <select id="colorSelect" class="select-box"></select>
-      <label>Pilih Ukuran:</label>
-      <select id="sizeSelect" class="select-box">
-        <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option>
-      </select>
-      <p id="confirmationText" style="margin:15px 0; font-size:13px; color:#555; background:#f0f0f0; padding:10px; border-radius:5px;"></p>
+      <p id="modalPrice" style="color:#27ae60; font-weight:bold; font-size:20px;"></p>
+      <p id="modalDesc" style="color:#666; font-size:14px; line-height:1.5;"></p>
+      
+      <div style="text-align:left; margin-top:20px;">
+        <label>Pilih Warna:</label>
+        <select id="colorSelect" class="select-box"></select>
+        <label>Pilih Ukuran:</label>
+        <select id="sizeSelect" class="select-box">
+          <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option>
+        </select>
+      </div>
+
+      <p id="confirmationText" style="margin:15px 0; font-size:13px; color:#555; background:#f0f2f5; padding:10px; border-radius:8px;"></p>
       <a id="modalBuy" class="buy-btn" href="#" target="_blank"> Beli via WhatsApp</a>
     </div>
   </div>
 
   <footer class="site-footer">
     <div class="footer-content">
-      <p>© <span id="year"></span> RianKiaMado - All Rights Reserved.</p>
+      <p>© <span id="year"></span> YR STORE. Designed for Excellence.</p>
     </div>
   </footer>
 
@@ -509,21 +632,20 @@
       const totalItems = filteredProducts.length;
       const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-      // A. Tampilkan/Sembunyikan Kartu Produk
-      // Sembunyikan SEMUA produk dulu
+      // A. Sembunyikan SEMUA produk dulu
       allProductElements.forEach(el => el.style.display = "none");
 
-      // Tentukan index awal dan akhir untuk halaman saat ini
+      // B. Hitung produk mana yang harus tampil
       const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
       const endIndex = startIndex + ITEMS_PER_PAGE;
-
-      // Ambil slice produk yang harus tampil, lalu set display block/flex
       const itemsToShow = filteredProducts.slice(startIndex, endIndex);
+
+      // C. Tampilkan produk terpilih (set display flex agar layout card benar)
       itemsToShow.forEach(el => el.style.display = "flex");
 
-      // B. Buat Tombol Pagination
+      // D. Buat Tombol Pagination
       const paginationContainer = document.getElementById("paginationControls");
-      paginationContainer.innerHTML = ""; // Bersihkan tombol lama
+      paginationContainer.innerHTML = ""; 
 
       if (totalPages > 1) {
         // Tombol Prev
@@ -552,17 +674,15 @@
         paginationContainer.appendChild(nextBtn);
       }
       
-      // Jika tidak ada produk ditemukan
       if (totalItems === 0) {
-        paginationContainer.innerHTML = "<p style='color:#666;'>Produk tidak ditemukan.</p>";
+        paginationContainer.innerHTML = "<p style='color:#999; font-style:italic;'>Produk tidak ditemukan.</p>";
       }
     }
 
     function changePage(pageNum) {
       currentPage = pageNum;
       renderPagination();
-      // Scroll ke atas container produk agar user tahu halaman berubah
-      document.getElementById("productContainer").scrollIntoView({behavior: "smooth"});
+      window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll ke paling atas
     }
 
     // --- LOGIKA MODAL ---
@@ -590,7 +710,7 @@
         let finalLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
         if(!finalLink.includes("text=")) finalLink += "&text=";
         
-        const message = `Halo Admin, saya mau beli:\nProduk: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}`;
+        const message = `Halo Admin YR STORE,\nSaya tertarik membeli:\n------------------\nNama: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}\n------------------\nMohon info stok dan ongkir.`;
         document.getElementById("modalBuy").href = finalLink + encodeURIComponent(message);
       }
 
