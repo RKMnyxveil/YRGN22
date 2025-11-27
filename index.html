@@ -5,114 +5,155 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YRGN22 STORE</title>
   <style>
+    /* --- CSS UTAMA --- */
     body {
-      font-family: 'Segoe UI', Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background: #f4f6f9;
+      background-color: #f0f2f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
+    /* --- HEADER --- */
     header {
       background: #2c3e50;
       color: white;
-      padding: 15px 20px;
+      padding: 15px 5%; /* Padding kiri kanan responsif */
       display: flex;
       align-items: center;
-      justify-content: flex-start;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
       gap: 15px;
     }
 
     header img {
-      height: 50px;
+      height: 45px;
+      width: auto;
+    }
+
+    .brand-outline {
+      border: 2px solid rgba(255,255,255,0.8);
+      padding: 5px 15px;
+      border-radius: 8px;
     }
 
     header h1 {
       margin: 0;
-      font-size: 24px;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
     }
 
+    /* --- CONTROLS (Pencarian) --- */
     .controls {
+      background: white;
       padding: 20px;
       text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
     .controls input, .controls select {
-      padding: 10px;
+      padding: 12px 15px;
       font-size: 16px;
-      margin: 5px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+      outline: none;
+      transition: all 0.3s;
     }
 
+    .controls input {
+      width: 300px;
+    }
+
+    .controls input:focus, .controls select:focus {
+      border-color: #3498db;
+      box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+    }
+
+    /* --- CONTAINER PRODUK --- */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      padding: 20px;
+      gap: 25px; /* Jarak antar kartu */
+      padding: 0 20px 40px 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+      flex: 1; /* Agar footer terdorong ke bawah */
     }
 
+    /* --- KARTU PRODUK --- */
     .product-card {
-      width: 280px;
       background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      margin: 15px;
+      width: 260px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
       overflow: hidden;
-      transition: transform 0.2s;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
+      display: flex;
+      flex-direction: column;
     }
 
     .product-card:hover {
-      transform: scale(1.03);
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0,0,0,0.15);
     }
 
     .product-card img {
       width: 100%;
-      height: 180px;
+      height: 200px;
       object-fit: cover;
+      background-color: #eee;
     }
 
     .product-info {
       padding: 15px;
+      text-align: left;
+    }
+
+    .category-badge {
+      display: inline-block;
+      background: #e1f0fa;
+      color: #2980b9;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      text-transform: uppercase;
     }
 
     .product-info h3 {
-      margin: 0;
+      margin: 0 0 5px 0;
       font-size: 18px;
-      color: #333;
+      color: #2c3e50;
     }
 
-    .product-info p {
-      margin: 5px 0;
-      color: #666;
-    }
-
-    .category {
-      display: inline-block;
-      background: #3498db;
-      color: white;
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      margin-bottom: 8px;
-    }
-
-    .buy-btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 10px 15px;
-      background: #25D366;
-      color: white;
-      border-radius: 5px;
-      text-decoration: none;
+    .price {
+      font-size: 16px;
+      color: #e67e22; /* Warna oranye untuk harga */
       font-weight: bold;
+      margin: 0;
     }
 
-    .buy-btn:hover {
-      background: #128C7E;
-    }
-
-    /* Popup Modal */
+    /* --- MODAL --- */
     .modal {
       display: none;
       position: fixed;
@@ -123,345 +164,358 @@
       height: 100%;
       overflow: auto;
       background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(5px); /* Efek blur di belakang modal */
     }
 
     .modal-content {
       background-color: #fff;
-      margin: 10% auto;
-      padding: 20px;
-      border-radius: 10px;
+      margin: 5% auto;
+      padding: 25px;
+      border-radius: 15px;
       width: 90%;
-      max-width: 500px;
+      max-width: 450px;
       text-align: center;
       position: relative;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      animation: fadeIn 0.3s;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
     }
 
     .modal-content img {
       width: 100%;
-      height: auto;
-      border-radius: 8px;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
       margin-bottom: 15px;
     }
 
     .close {
       position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 24px;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
       font-weight: bold;
-      color: #333;
+      color: #999;
       cursor: pointer;
+      transition: color 0.2s;
     }
 
     .close:hover {
-      color: red;
+      color: #e74c3c;
     }
 
     .select-box {
-      margin: 10px 0;
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 5px;
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0 15px 0;
       border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f9f9f9;
     }
 
+    label {
+      display: block;
+      text-align: left;
+      font-weight: 600;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .buy-btn {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 20px;
+      padding: 14px;
+      background: #25D366;
+      color: white;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 16px;
+      transition: background 0.3s;
+      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.4);
+    }
+
+    .buy-btn:hover {
+      background: #128C7E;
+    }
+
+    /* --- FOOTER --- */
+    .site-footer {
+      background-color: #2c3e50;
+      color: rgba(255,255,255,0.7);
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      margin-top: auto;
+    }
+
+    /* --- RESPONSIF --- */
     @media screen and (max-width: 600px) {
-      .product-card {
-        width: 90%;
+      .controls input {
+        width: 100%;
       }
-      .controls input, .controls select {
-        width: 90%;
+      .controls select {
+        width: 100%;
+      }
+      .product-card {
+        width: 100%; /* Penuh di layar HP */
+      }
+      header {
+        justify-content: center;
       }
     }
-
-.brand-outline {
-  border: 2px solid white;
-  color: white;
-  padding: 6px 16px;
-  border-radius: 8px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.site-footer {
-  background-color: #2c3e50;
-  color: white;
-  text-align: center;
-  padding: 20px;
-  font-size: 14px;
-  margin-top: 40px;
-}
-
-.site-footer a {
-  color: #f1c40f;
-  text-decoration: none;
-}
-
-.site-footer a:hover {
-  text-decoration: underline;
-}
-
-.footer-content p {
-  margin: 6px 0;
-}
-
   </style>
 </head>
 <body>
 
-  <!-- Header -->
   <header>
-    <img src="Logo/Logo Yrgn copy.png" alt="Logo Toko Online">
-    <div class="brand-outline">
-      <h1>YR STORE</h1>
+    <div class="logo-container">
+      <img src="Logo/Logo Yrgn copy.png" alt="Logo" onerror="this.style.display='none'"> 
+      <div class="brand-outline">
+        <h1>YR STORE</h1>
+      </div>
     </div>
   </header>
 
-  <!-- Search & Filter -->
   <div class="controls">
-    <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="Cari produk berdasarkan nama...">
+    <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="🔍 Cari nama produk...">
     <select id="categorySelect" onchange="filterProducts()">
-      <option value="all">Semua Kategori</option>
-      <option value="Pakaian">Pakaian</option>
-      <option value="Sepatu">Sepatu</option>
+      <option value="all">📂 Semua Kategori</option>
+      <option value="Pakaian">👕 Pakaian</option>
+      <option value="Sepatu">👟 Sepatu</option>
     </select>
   </div>
 
-  <!-- Produk -->
-<div class="container" id="productContainer">
+  <div class="container" id="productContainer">
 
-  <!-- Produk 1 -->
-  <div class="product-card" 
-       data-name="Kaos Polos" 
-       data-category="Pakaian"
-       onclick="openModal(
-         'Kaos Polos',
-         'Rp 75.000',
-         'Kaos polos bahan katun premium, nyaman dipakai sehari-hari.',
-         {
-           'Merah':'Barang/Merah.png',
-           'Hitam':'Barang/Hitam.png',
-           'Putih':'Barang/Putih.png'
-         },
-         'https://wa.me/6282223108015?text=Halo%20saya%20ingin%20beli%20Kaos%20Polos.%0ASilakan%20isi%20data%20berikut:%0ANama:%20[isi%20nama%20Anda]%0AAlamat:%20[isi%20alamat%20lengkap]%0AWarna:%20Merah%0AUkuran:%20S'
-                )">
-    <img src="Barang/baju.jpg" alt="Kaos Polos">
-    <div class="product-info">
-      <span class="category">Pakaian</span>
-      <h3>Kaos Polos</h3>
-      <p>Rp 75.000</p>
+    <div class="product-card" 
+         data-name="Kaos Polos" 
+         data-category="Pakaian"
+         onclick="openModal(
+           'Kaos Polos',
+           'Rp 75.000',
+           'Kaos polos bahan katun premium, nyaman dipakai sehari-hari.',
+           {
+             'Merah':'Barang/Merah.png',
+             'Hitam':'Barang/Hitam.png',
+             'Putih':'Barang/Putih.png'
+           },
+           'https://wa.me/6282223108015?text='
+         )">
+      <img src="Barang/baju.jpg" alt="Kaos Polos" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+      <div class="product-info">
+        <span class="category-badge">Pakaian</span>
+        <h3>Kaos Polos</h3>
+        <p class="price">Rp 75.000</p>
+      </div>
+    </div>
+
+    <div class="product-card" 
+         data-name="Sepatu Sneakers" 
+         data-category="Sepatu"
+         onclick="openModal(
+           'Sepatu Sneakers',
+           'Rp 250.000',
+           'Sepatu sneakers trendy, cocok untuk jalan santai maupun olahraga.',
+           {
+             'Hitam':'Barang/celana hitam.png',
+             'Putih':'Barang/celana putih.png',
+             'Biru':'Barang/Celana Biru.png'
+           },
+           'https://wa.me/6282223108015?text='
+         )">
+      <img src="Barang/celana.jpg" alt="Sepatu Sneakers" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+      <div class="product-info">
+        <span class="category-badge">Sepatu</span>
+        <h3>Sepatu Sneakers</h3>
+        <p class="price">Rp 250.000</p>
+      </div>
+    </div>
+
+    <div class="product-card" 
+         data-name="Sepatu Sport" 
+         data-category="Sepatu"
+         onclick="openModal(
+           'Sepatu Sport',
+           'Rp 300.000',
+           'Sepatu olahraga yang ringan dan kuat.',
+           {
+             'Hitam':'Barang/celana hitam.png',
+             'Biru':'Barang/Celana Biru.png'
+           },
+           'https://wa.me/6282223108015?text='
+         )">
+      <img src="Barang/celana.jpg" alt="Sepatu Sport" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+      <div class="product-info">
+        <span class="category-badge">Sepatu</span>
+        <h3>Sepatu Sport</h3>
+        <p class="price">Rp 300.000</p>
+      </div>
+    </div>
+
+    <div class="product-card" 
+         data-name="Kemeja Flanel" 
+         data-category="Pakaian"
+         onclick="openModal(
+           'Kemeja Flanel',
+           'Rp 150.000',
+           'Kemeja flanel kotak-kotak bahan adem.',
+           {
+             'Merah':'Barang/Merah.png',
+             'Hitam':'Barang/Hitam.png'
+           },
+           'https://wa.me/6282223108015?text='
+         )">
+      <img src="Barang/baju.jpg" alt="Kemeja Flanel" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+      <div class="product-info">
+        <span class="category-badge">Pakaian</span>
+        <h3>Kemeja Flanel</h3>
+        <p class="price">Rp 150.000</p>
+      </div>
+    </div>
+
+  </div> <div id="productModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <img id="modalImage" src="" alt="Produk">
+      <h2 id="modalName">Nama Produk</h2>
+      <p id="modalPrice" style="color:#e67e22; font-weight:bold; font-size:18px;"></p>
+      <p id="modalDesc" style="color:#666; font-size:14px; margin-bottom:20px;"></p>
+
+      <label for="colorSelect">Pilih Warna:</label>
+      <select id="colorSelect" class="select-box"></select>
+
+      <label for="sizeSelect">Pilih Ukuran:</label>
+      <select id="sizeSelect" class="select-box">
+        <option value="S">S</option>
+        <option value="M">M</option>
+        <option value="L">L</option>
+        <option value="XL">XL</option>
+      </select>
+
+      <p id="confirmationText" style="margin:15px 0; font-size:13px; color:#555; background:#f0f0f0; padding:10px; border-radius:5px;"></p>
+
+      <a id="modalBuy" class="buy-btn" href="#" target="_blank">
+        <span style="font-size:18px; vertical-align:middle;"></span> Beli via WhatsApp
+      </a>
     </div>
   </div>
 
-  <!-- Produk 2 -->
-  <div class="product-card" 
-       data-name="Sepatu Sneakers" 
-       data-category="Sepatu"
-       onclick="openModal(
-         'Sepatu Sneakers',
-         'Rp 250.000',
-         'Sepatu sneakers trendy, cocok untuk jalan santai maupun olahraga.',
-         {
-           'Hitam':'Barang/celana hitam.png',
-           'Putih':'Barang/celana putih.png',
-           'Biru':'Barang/Celana Biru.png'
-         },
-         'https://wa.me/6282223108015?text=Halo%20saya%20ingin%20beli%20Kaos%20Polos.%0ASilakan%20isi%20data%20berikut:%0ANama:%20[isi%20nama%20Anda]%0AAlamat:%20[isi%20alamat%20lengkap]%0AWarna:%20Merah%0AUkuran:%20S'
-       )">
-    <img src="Barang/celana.jpg" alt="Sepatu Sneakers">
-    <div class="product-info">
-      <span class="category">Sepau</span>
-      <h3>Sepatu Sneakers</h3>
-      <p>Rp 250.000</p>
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>© <span id="year"></span> YR STORE - All Rights Reserved.</p>
     </div>
-  </div>
+  </footer>
 
-</div>
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
 
-  <!-- Produk 3 -->
-  <div class="product-card" 
-       data-name="Sepatu Sneakers" 
-       data-category="Sepatu"
-       onclick="openModal(
-         'Sepatu Sneakers',
-         'Rp 250.000',
-         'Sepatu sneakers trendy, cocok untuk jalan santai maupun olahraga.',
-         {
-           'Hitam':'Barang/celana hitam.png',
-           'Putih':'Barang/celana putih.png',
-           'Biru':'Barang/Celana Biru.png'
-         },
-         'https://wa.me/6282223108015?text=Halo%20saya%20ingin%20beli%20Kaos%20Polos.%0ASilakan%20isi%20data%20berikut:%0ANama:%20[isi%20nama%20Anda]%0AAlamat:%20[isi%20alamat%20lengkap]%0AWarna:%20Merah%0AUkuran:%20S'
-       )">
-    <img src="Barang/celana.jpg" alt="Sepatu Sneakers">
-    <div class="product-info">
-      <span class="category">Sepau</span>
-      <h3>Sepatu Sneakers</h3>
-      <p>Rp 250.000</p>
-    </div>
-  </div>
+    // --- FUNGSI MODAL ---
+    function openModal(name, price, desc, images, linkBase) {
+      document.getElementById("modalName").innerText = name;
+      document.getElementById("modalPrice").innerText = price;
+      document.getElementById("modalDesc").innerText = desc;
 
-</div>
+      const colorSelect = document.getElementById("colorSelect");
+      colorSelect.innerHTML = "";
 
-  <!-- Produk 4 -->
-  <div class="product-card" 
-       data-name="Sepatu Sneakers" 
-       data-category="Sepatu"
-       onclick="openModal(
-         'Sepatu Sneakers',
-         'Rp 250.000',
-         'Sepatu sneakers trendy, cocok untuk jalan santai maupun olahraga.',
-         {
-           'Hitam':'Barang/celana hitam.png',
-           'Putih':'Barang/celana putih.png',
-           'Biru':'Barang/Celana Biru.png'
-         },
-         'https://wa.me/6282223108015?text=Halo%20saya%20ingin%20beli%20Kaos%20Polos.%0ASilakan%20isi%20data%20berikut:%0ANama:%20[isi%20nama%20Anda]%0AAlamat:%20[isi%20alamat%20lengkap]%0AWarna:%20Merah%0AUkuran:%20S'
-       )">
-    <img src="Barang/celana.jpg" alt="Sepatu Sneakers">
-    <div class="product-info">
-      <span class="category">Sepau</span>
-      <h3>Sepatu Sneakers</h3>
-      <p>Rp 250.000</p>
-    </div>
-  </div>
+      // Isi dropdown warna
+      Object.keys(images).forEach(color => {
+        const option = document.createElement("option");
+        option.value = color;
+        option.text = color;
+        colorSelect.appendChild(option);
+      });
 
-</div>
+      // Default pilih warna pertama
+      if(Object.keys(images).length > 0) {
+        colorSelect.value = Object.keys(images)[0];
+      }
 
-<!-- Modal -->
-<div id="productModal" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="closeModal()">&times;</span>
-    <img id="modalImage" src="" alt="Produk">
-    <h2 id="modalName"></h2>
-    <p id="modalPrice"></p>
-    <p id="modalDesc"></p>
+      // Fungsi update tampilan di dalam modal
+      function updatePreview() {
+        const color = colorSelect.value;
+        const size = document.getElementById("sizeSelect").value;
+        // Ambil gambar berdasarkan warna, jika tidak ada pakai placeholder
+        const imageUrl = images[color] || 'https://via.placeholder.com/300'; 
 
-    <!-- Pilihan Warna -->
-    <label for="colorSelect">Pilih Warna:</label>
-    <select id="colorSelect" class="select-box"></select>
+        document.getElementById("modalImage").src = imageUrl;
+        document.getElementById("confirmationText").innerText = 
+          `Pilihan: Warna ${color}, Ukuran ${size}`;
 
-    <!-- Pilihan Ukuran -->
-    <label for="sizeSelect">Pilih Ukuran:</label>
-    <select id="sizeSelect" class="select-box">
-      <option value="S">S</option>
-      <option value="M">M</option>
-      <option value="L">L</option>
-      <option value="XL">XL</option>
-    </select>
+        // Format Pesan WA
+        const message = `Halo Admin YR STORE,
+Saya ingin memesan produk berikut:
+------------------------------
+Produk : ${name}
+Harga  : ${price}
+Warna  : ${color}
+Ukuran : ${size}
+------------------------------
+Mohon info total harga dan ongkos kirim. Terima kasih.`;
 
-    <!-- Pesan konfirmasi -->
-    <p id="confirmationText" style="margin-top:10px; font-weight:bold; color:#333;"></p>
+        const encoded = encodeURIComponent(message);
+        // Pastikan linkBase tidak null
+        const safeLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
+        // Kita hanya mengambil base URL dari parameter link, lalu menempelkan text
+        // (Di kode html di atas, saya set linkBase ke "https://wa.me/...?text=")
+        // Jadi kita perlu manipulasi string sedikit agar tidak double "?text=" jika sudah ada
+        
+        let finalLink = safeLink;
+        if(!safeLink.includes("text=")) {
+           finalLink += "&text=";
+        }
+        
+        document.getElementById("modalBuy").href = finalLink + encoded;
+      }
 
-    <!-- <a id="modalBuy" class="buy-btn" href="#" target="_blank">Beli via WhatsApp</a> -->
-     <a id="modalBuy" class="buy-btn" href="#" target="_blank">Beli via WhatsApp</a>
-  </div>
-</div>
-<footer class="site-footer">
-  <div class="footer-content">
-    <p>© <span id="year"></span> Riankiamado</p>
-  </div>
-</footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
+      colorSelect.onchange = updatePreview;
+      document.getElementById("sizeSelect").onchange = updatePreview;
+
+      updatePreview(); // Jalankan sekali saat buka
+      document.getElementById("productModal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("productModal").style.display = "none";
+    }
+
+    // Tutup modal jika klik di luar area konten
+    window.onclick = function(event) {
+      const modal = document.getElementById("productModal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // --- FUNGSI FILTER & SEARCH (Yang tadi hilang) ---
+    function filterProducts() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const categorySelect = document.getElementById("categorySelect").value;
+      const products = document.getElementsByClassName("product-card");
+
+      for (let i = 0; i < products.length; i++) {
+        const productName = products[i].getAttribute("data-name").toLowerCase();
+        const productCategory = products[i].getAttribute("data-category");
+
+        const matchesSearch = productName.includes(searchInput);
+        const matchesCategory = categorySelect === "all" || productCategory === categorySelect;
+
+        if (matchesSearch && matchesCategory) {
+          products[i].style.display = ""; // Tampilkan (flex)
+        } else {
+          products[i].style.display = "none"; // Sembunyikan
+        }
+      }
+    }
+  </script>
 
 </body>
-<script>
-  function openModal(name, price, desc, images, link) {
-  document.getElementById("modalName").innerText = name;
-  document.getElementById("modalPrice").innerText = price;
-  document.getElementById("modalDesc").innerText = desc;
-
-  const colorSelect = document.getElementById("colorSelect");
-  colorSelect.innerHTML = "";
-
-  // Isi dropdown warna dari object images
-  Object.keys(images).forEach(color => {
-    const option = document.createElement("option");
-    option.value = color;
-    option.text = color;
-    colorSelect.appendChild(option);
-  });
-
-  // Set default warna
-  colorSelect.value = Object.keys(images)[0];
-
-  // Fungsi update gambar, konfirmasi, dan link WhatsApp
-  function updatePreview() {
-    const color = colorSelect.value;
-    const size = document.getElementById("sizeSelect").value;
-    const imageUrl = images[color];
-
-    // Update gambar preview
-    document.getElementById("modalImage").src = imageUrl;
-
-    // Update konfirmasi
-    document.getElementById("confirmationText").innerText =
-      `Anda memilih warna: ${color} | ukuran: ${size}`;
-
-    // Buat pesan WhatsApp
-    const message = `Halo saya ingin beli ${name}.
-Silakan isi data berikut:
-Nama: [isi nama Anda]
-Alamat: [isi alamat lengkap]
-Warna: ${color}
-Ukuran: ${size}
-
-Metode pembayaran: Transfer Bank
-Silakan transfer ke rekening berikut:
-Bank BCA
-No. Rekening: 1234567890
-a.n. YR STORE
-
-Setelah transfer, kirim bukti pembayaran di sini.`;
-
-
-    const encoded = encodeURIComponent(message);
-    document.getElementById("modalBuy").href = `${link}&text=${encoded}`;
-  }
-
-  // Event listener
-  colorSelect.onchange = updatePreview;
-  document.getElementById("sizeSelect").onchange = updatePreview;
-
-  // Set awal
-  updatePreview();
-
-  // Tampilkan modal
-  document.getElementById("productModal").style.display = "block";
-}
-
-function closeModal() {
-  document.getElementById("productModal").style.display = "none";
-}
-
-
-function filterProducts() {
-  // 1. Ambil nilai dari input pencarian dan dropdown kategori
-  const searchInput = document.getElementById("searchInput").value.toLowerCase();
-  const categorySelect = document.getElementById("categorySelect").value;
-  
-  // 2. Ambil semua kartu produk
-  const products = document.getElementsByClassName("product-card");
-
-  // 3. Loop melalui setiap produk untuk mengecek apakah sesuai kriteria
-  for (let i = 0; i < products.length; i++) {
-    const productName = products[i].getAttribute("data-name").toLowerCase();
-    const productCategory = products[i].getAttribute("data-category");
-
-    // Cek apakah nama produk mengandung kata kunci pencarian
-    const matchesSearch = productName.includes(searchInput);
-    
-    // Cek apakah kategori cocok (atau jika memilih 'all')
-    const matchesCategory = categorySelect === "all" || productCategory === categorySelect;
-
-    // 4. Tampilkan atau sembunyikan produk
-    if (matchesSearch && matchesCategory) {
-      products[i].style.display = ""; // Tampilkan (default css)
-    } else {
-      products[i].style.display = "none"; // Sembunyikan
-    }
-  }
-}
-</script>
+</html>
