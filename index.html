@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>YRGN22 STORE - Full Image View</title>
   <style>
     /* --- 1. RESET & BASIC --- */
@@ -15,6 +18,8 @@
       display: flex;
       flex-direction: column;
       min-height: 100vh;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     /* --- 2. STICKY NAV --- */
@@ -393,7 +398,7 @@
     }
   </style>
 </head>
-<body>
+<body oncontextmenu="return false">
 
   <div class="sticky-nav">
     <header>
@@ -584,7 +589,7 @@
       </div>
 
       <p id="confirmationText" style="margin:15px 0; font-size:13px; color:#555; background:#f0f2f5; padding:10px; border-radius:8px;"></p>
-      <a id="modalBuy" class="buy-btn" href="#" target="_blank"> Beli via WhatsApp</a>
+      <a id="modalBuy" class="buy-btn" href="#" target="_blank" rel="noopener noreferrer"> Beli via WhatsApp</a>
     </div>
   </div>
 
@@ -595,144 +600,193 @@
   </footer>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+  // 1. Update Tahun Otomatis di Footer
+  document.getElementById("year").textContent = new Date().getFullYear();
 
-    // --- CONFIG PAGINATION ---
-    const ITEMS_PER_PAGE = 12; 
-    let currentPage = 1;
-    let filteredProducts = []; 
+  // [KEAMANAN] Blokir Tombol Developer Tools (F12, Ctrl+Shift+I, Klik Kanan dsb)
+  document.onkeydown = function(e) {
+    if(event.keyCode == 123) { return false; } // Blokir F12
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Blokir Inspect
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } 
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } 
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Blokir View Source
+  }
+
+  // 2. Konfigurasi Halaman (Pagination)
+  const ITEMS_PER_PAGE = 12; 
+  let currentPage = 1;
+  let filteredProducts = []; 
+  
+  // Ambil semua elemen produk saat pertama load
+  const allProductElements = Array.from(document.getElementsByClassName("product-card"));
+
+  // Jalankan saat website pertama kali dibuka
+  window.onload = function() {
+    updateFilter(); 
+  };
+
+  // [KEAMANAN] Fungsi Sanitasi (Pembersih Input Pencarian)
+  function sanitizeInput(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+  }
+
+  // 3. Logika Filter & Pencarian
+  function updateFilter() {
+    // Ambil input pencarian & bersihkan kodenya
+    let rawInput = document.getElementById("searchInput").value;
+    const searchInput = sanitizeInput(rawInput).toLowerCase();
     
-    // Ambil semua elemen produk saat pertama load
-    const allProductElements = Array.from(document.getElementsByClassName("product-card"));
+    // Ambil kategori yang dipilih
+    const categorySelect = document.getElementById("categorySelect").value;
 
-    // Inisialisasi awal
-    window.onload = function() {
-      updateFilter(); // Jalankan filter sekali untuk set tampilan awal
-    };
-
-    // --- LOGIKA FILTER & PAGINATION ---
-    function updateFilter() {
-      const searchInput = document.getElementById("searchInput").value.toLowerCase();
-      const categorySelect = document.getElementById("categorySelect").value;
-
-      // 1. Filter dulu semua produk berdasarkan Search & Kategori
-      filteredProducts = allProductElements.filter(card => {
-        const name = card.getAttribute("data-name").toLowerCase();
-        const category = card.getAttribute("data-category");
-        
-        const matchSearch = name.includes(searchInput);
-        const matchCategory = categorySelect === "all" || category === categorySelect;
-
-        return matchSearch && matchCategory;
-      });
-
-      // 2. Reset ke halaman 1 setiap kali filter berubah
-      currentPage = 1;
-
-      // 3. Render Halaman
-      renderPagination();
-    }
-
-    function renderPagination() {
-      const totalItems = filteredProducts.length;
-      const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-      // A. Sembunyikan SEMUA produk dulu
-      allProductElements.forEach(el => el.style.display = "none");
-
-      // B. Hitung produk mana yang harus tampil
-      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-      const endIndex = startIndex + ITEMS_PER_PAGE;
-      const itemsToShow = filteredProducts.slice(startIndex, endIndex);
-
-      // C. Tampilkan produk terpilih (set display flex agar layout card benar)
-      itemsToShow.forEach(el => el.style.display = "flex");
-
-      // D. Buat Tombol Pagination
-      const paginationContainer = document.getElementById("paginationControls");
-      paginationContainer.innerHTML = ""; 
-
-      if (totalPages > 1) {
-        // Tombol Prev
-        const prevBtn = document.createElement("button");
-        prevBtn.innerText = "« Prev";
-        prevBtn.className = "page-btn";
-        prevBtn.disabled = currentPage === 1;
-        prevBtn.onclick = () => changePage(currentPage - 1);
-        paginationContainer.appendChild(prevBtn);
-
-        // Tombol Angka
-        for (let i = 1; i <= totalPages; i++) {
-          const btn = document.createElement("button");
-          btn.innerText = i;
-          btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-          btn.onclick = () => changePage(i);
-          paginationContainer.appendChild(btn);
-        }
-
-        // Tombol Next
-        const nextBtn = document.createElement("button");
-        nextBtn.innerText = "Next »";
-        nextBtn.className = "page-btn";
-        nextBtn.disabled = currentPage === totalPages;
-        nextBtn.onclick = () => changePage(currentPage + 1);
-        paginationContainer.appendChild(nextBtn);
-      }
+    // Filter produk
+    filteredProducts = allProductElements.filter(card => {
+      const name = card.getAttribute("data-name").toLowerCase();
+      const category = card.getAttribute("data-category");
       
-      if (totalItems === 0) {
-        paginationContainer.innerHTML = "<p style='color:#999; font-style:italic;'>Produk tidak ditemukan.</p>";
+      const matchSearch = name.includes(searchInput);
+      const matchCategory = categorySelect === "all" || category === categorySelect;
+
+      return matchSearch && matchCategory;
+    });
+
+    // Reset ke halaman 1 jika filter berubah
+    currentPage = 1;
+    renderPagination();
+  }
+
+  // 4. Logika Pagination (Halaman 1, 2, dst)
+  function renderPagination() {
+    const totalItems = filteredProducts.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    // Sembunyikan semua dulu
+    allProductElements.forEach(el => el.style.display = "none");
+
+    // Hitung produk mana yang harus muncul
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const itemsToShow = filteredProducts.slice(startIndex, endIndex);
+
+    // Tampilkan produk yang sesuai hitungan
+    itemsToShow.forEach(el => el.style.display = "flex");
+
+    // Buat Tombol Navigasi Halaman
+    const paginationContainer = document.getElementById("paginationControls");
+    paginationContainer.innerHTML = ""; 
+
+    if (totalPages > 1) {
+      // Tombol Sebelumnya
+      const prevBtn = document.createElement("button");
+      prevBtn.innerText = "« Prev";
+      prevBtn.className = "page-btn";
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => changePage(currentPage - 1);
+      paginationContainer.appendChild(prevBtn);
+
+      // Tombol Angka
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+        btn.onclick = () => changePage(i);
+        paginationContainer.appendChild(btn);
       }
+
+      // Tombol Berikutnya
+      const nextBtn = document.createElement("button");
+      nextBtn.innerText = "Next »";
+      nextBtn.className = "page-btn";
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => changePage(currentPage + 1);
+      paginationContainer.appendChild(nextBtn);
     }
-
-    function changePage(pageNum) {
-      currentPage = pageNum;
-      renderPagination();
-      window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll ke paling atas
+    
+    // Pesan jika produk kosong
+    if (totalItems === 0) {
+      paginationContainer.innerHTML = "<p style='color:#999; font-style:italic;'>Produk tidak ditemukan.</p>";
     }
+  }
 
-    // --- LOGIKA MODAL ---
-    function openModal(name, price, desc, images, linkBase) {
-      document.getElementById("modalName").innerText = name;
-      document.getElementById("modalPrice").innerText = price;
-      document.getElementById("modalDesc").innerText = desc;
-      const colorSelect = document.getElementById("colorSelect");
-      colorSelect.innerHTML = "";
-      Object.keys(images).forEach(color => {
-        const option = document.createElement("option");
-        option.value = color;
-        option.text = color;
-        colorSelect.appendChild(option);
-      });
-      if(Object.keys(images).length > 0) colorSelect.value = Object.keys(images)[0];
+  function changePage(pageNum) {
+    currentPage = pageNum;
+    renderPagination();
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+  }
 
-      function updatePreview() {
-        const color = colorSelect.value;
-        const size = document.getElementById("sizeSelect").value;
-        const imageUrl = images[color] || 'https://via.placeholder.com/300'; 
-        document.getElementById("modalImage").src = imageUrl;
-        document.getElementById("confirmationText").innerText = `Pilihan: Warna ${color}, Ukuran ${size}`;
-        
-        let finalLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
-        if(!finalLink.includes("text=")) finalLink += "&text=";
-        
-        const message = `Halo Admin YR STORE,\nSaya tertarik membeli:\n------------------\nNama: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}\n------------------\nMohon info stok dan ongkir.`;
-        document.getElementById("modalBuy").href = finalLink + encodeURIComponent(message);
-      }
+  // 5. FUNGSI UTAMA MODAL (POP UP) - Ini bagian yang Anda tanyakan
+  function openModal(name, price, desc, images, linkBase) {
+    // Isi data dasar ke dalam Pop Up
+    document.getElementById("modalName").innerText = name;
+    document.getElementById("modalPrice").innerText = price;
+    document.getElementById("modalDesc").innerText = desc;
 
-      colorSelect.onchange = updatePreview;
-      document.getElementById("sizeSelect").onchange = updatePreview;
-      updatePreview();
+    // Reset dan Isi Pilihan Warna
+    const colorSelect = document.getElementById("colorSelect");
+    colorSelect.innerHTML = "";
+    Object.keys(images).forEach(color => {
+      const option = document.createElement("option");
+      option.value = color;
+      option.text = color;
+      colorSelect.appendChild(option);
+    });
+    
+    // Pilih warna pertama sebagai default
+    if(Object.keys(images).length > 0) colorSelect.value = Object.keys(images)[0];
+
+    // --- FUNGSI UPDATE TAMPILAN & LINK WA (Nested Function) ---
+    function updatePreview() {
+      // Ambil warna dan ukuran yang sedang dipilih user
+      const color = colorSelect.value;
+      const size = document.getElementById("sizeSelect").value;
       
-      // Update: Menggunakan FLEX agar center di semua device
-      document.getElementById("productModal").style.display = "flex";
+      // Ganti gambar sesuai warna
+      const imageUrl = images[color] || 'https://via.placeholder.com/300'; 
+      document.getElementById("modalImage").src = imageUrl;
+      
+      // Update teks konfirmasi kecil di bawah
+      document.getElementById("confirmationText").innerText = `Pilihan: Warna ${color}, Ukuran ${size}`;
+      
+      // --- BAGIAN PENTING: LINK WHATSAPP ---
+      
+      // 1. Pastikan link dasar aman (jika kosong, pakai nomor default)
+      let finalLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
+      
+      // 2. Cek apakah sudah ada "?text=" atau "&text=", jika belum, tambahkan
+      if(!finalLink.includes("text=")) finalLink += "&text=";
+      
+      // 3. Susun Pesan
+      const message = `Halo Admin YR STORE,\nSaya tertarik membeli:\n------------------\nNama: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}\n------------------\nMohon info stok dan ongkir.`;
+      
+      // 4. ENCODE PESAN (Ini kuncinya!)
+      // encodeURIComponent akan mengubah spasi jadi %20, enter jadi %0A, dll
+      // Supaya link tidak error saat diklik
+      document.getElementById("modalBuy").href = finalLink + encodeURIComponent(message);
     }
 
-    function closeModal() {
-      document.getElementById("productModal").style.display = "none";
-    }
-    window.onclick = function(event) {
-      if (event.target == document.getElementById("productModal")) closeModal();
-    }
-  </script>
+    // Pasang "Event Listener"
+    // Artinya: Kalau user ganti warna/ukuran, jalankan updatePreview lagi
+    colorSelect.onchange = updatePreview;
+    document.getElementById("sizeSelect").onchange = updatePreview;
+
+    // Jalankan sekali di awal biar datanya muncul
+    updatePreview();
+    
+    // Tampilkan Modal (Gunakan flex agar center)
+    document.getElementById("productModal").style.display = "flex";
+  }
+
+  // Fungsi Tutup Modal
+  function closeModal() {
+    document.getElementById("productModal").style.display = "none";
+  }
+  
+  // Tutup jika klik di luar area putih
+  window.onclick = function(event) {
+    if (event.target == document.getElementById("productModal")) closeModal();
+  }
+</script>
 </body>
 </html>
