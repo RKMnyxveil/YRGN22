@@ -3,33 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>YRGN22 STORE - Premium</title>
+  <title>YRGN22 STORE - Clean Edition</title>
   <style>
     /* --- 1. RESET & BASIC --- */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f8f9fa; /* Background lebih terang/bersih */
+      background-color: #f8f9fa;
       color: #333;
       display: flex;
       flex-direction: column;
       min-height: 100vh;
     }
 
-    /* --- 2. STICKY NAVIGATION WRAPPER --- */
-    /* Ini kunci agar Header & Search menempel saat scroll */
+    /* --- 2. STICKY NAV --- */
     .sticky-nav {
       position: sticky;
       top: 0;
       z-index: 1000;
-      background-color: rgba(255, 255, 255, 0.95); /* Efek agak transparan modern */
-      backdrop-filter: blur(10px); /* Efek blur di belakang menu */
+      background-color: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
       box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       padding-bottom: 10px;
     }
 
-    /* --- HEADER --- */
     header {
       background: #2c3e50;
       color: white;
@@ -63,9 +61,9 @@
       letter-spacing: 1px;
     }
 
-    /* --- CONTROLS (Pencarian Modern) --- */
+    /* --- CONTROLS --- */
     .controls {
-      padding: 15px 20px 5px 20px; /* Padding bawah dikurangi */
+      padding: 15px 20px 5px 20px;
       text-align: center;
       display: flex;
       justify-content: center;
@@ -76,7 +74,7 @@
     .controls input, .controls select {
       padding: 12px 20px;
       font-size: 15px;
-      border-radius: 50px; /* Input membulat modern */
+      border-radius: 50px;
       border: 1px solid #e0e0e0;
       outline: none;
       transition: all 0.3s;
@@ -92,44 +90,42 @@
       box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
     }
 
-    /* --- CONTAINER PRODUK --- */
+    /* --- CONTAINER --- */
     .container {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 30px; /* Jarak antar kartu lebih lega */
+      gap: 30px;
       padding: 40px 20px;
       max-width: 1280px;
       margin: 0 auto;
     }
 
-    /* --- 3. PRODUCT CARD (DESAIN BARU) --- */
+    /* --- 3. PRODUCT CARD (CLEAN DESIGN) --- */
     .product-card {
       background: #ffffff;
       width: 280px;
       border-radius: 16px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Bayangan halus */
+      box-shadow: 0 10px 25px rgba(0,0,0,0.05);
       overflow: hidden;
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Efek membal halus */
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      position: relative;
       border: 1px solid #f0f0f0;
     }
 
     .product-card:hover {
-      transform: translateY(-10px); /* Naik saat hover */
+      transform: translateY(-10px);
       box-shadow: 0 20px 35px rgba(0,0,0,0.12);
       border-color: #3498db;
     }
 
-    /* Wrapper Gambar untuk Zoom */
+    /* Wrapper Gambar */
     .img-wrapper {
       width: 100%;
       height: 220px;
       overflow: hidden;
-      position: relative;
     }
 
     .product-card img {
@@ -140,27 +136,8 @@
     }
 
     .product-card:hover img {
-      transform: scale(1.12); /* Zoom gambar */
+      transform: scale(1.12);
     }
-
-    /* Badge Label (Pojok Kiri Atas) */
-    .badge {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      background: #ff6b6b;
-      color: white;
-      padding: 5px 12px;
-      border-radius: 20px;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      z-index: 2;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-    .badge.blue { background: #4ecdc4; }
-    .badge.purple { background: #a55eea; }
 
     /* Info Produk */
     .product-info {
@@ -168,7 +145,7 @@
       background: white;
       display: flex;
       flex-direction: column;
-      flex-grow: 1;
+      flex-grow: 1; /* Mengisi sisa ruang */
     }
 
     .category-text {
@@ -177,28 +154,22 @@
       text-transform: uppercase;
       letter-spacing: 1px;
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
     }
 
     .product-info h3 {
-      margin: 0 0 8px 0;
+      margin: 0 0 15px 0; /* Jarak ke harga lebih lega karena rating hilang */
       font-size: 17px;
       color: #2c3e50;
       font-weight: 700;
       line-height: 1.4;
     }
 
-    .rating {
-      color: #f1c40f;
-      font-size: 14px;
-      margin-bottom: 15px;
-    }
-
     .price-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: auto;
+      margin-top: auto; /* Dorong ke bawah mentok */
       border-top: 1px solid #f5f5f5;
       padding-top: 15px;
     }
@@ -243,7 +214,7 @@
       color: #555;
       padding: 10px 18px;
       cursor: pointer;
-      border-radius: 8px; /* Tombol kotak membulat */
+      border-radius: 8px;
       transition: all 0.3s;
       font-weight: 600;
       box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -252,7 +223,6 @@
     .page-btn:hover {
       background: #f8f9fa;
       transform: translateY(-2px);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.1);
     }
 
     .page-btn.active {
@@ -265,13 +235,11 @@
       background: #f0f0f0;
       color: #bbb;
       cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
     }
 
-    /* --- MODAL --- */
+    /* --- MODAL RESPONSIVE (BARU) --- */
     .modal {
-      display: none;
+      display: none; /* Diatur JS (Flex saat aktif) */
       position: fixed;
       z-index: 2000;
       left: 0;
@@ -279,17 +247,26 @@
       width: 100%;
       height: 100%;
       background-color: rgba(0,0,0,0.6);
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(5px);
+      
+      /* Flexbox Center: Membuat modal selalu di tengah layar HP/Laptop */
+      align-items: center;
+      justify-content: center;
+      padding: 20px; /* Padding agar tidak mentok pinggir layar HP */
+      box-sizing: border-box;
     }
 
     .modal-content {
       background-color: #fff;
-      margin: 5% auto;
-      padding: 30px;
       border-radius: 20px;
-      width: 90%;
-      max-width: 450px;
-      text-align: center;
+      width: 100%;
+      max-width: 450px; /* Lebar maksimal yang enak dibaca */
+      
+      /* Agar responsif di HP landscape/layar kecil */
+      max-height: 90vh; /* Maksimal tinggi 90% layar */
+      overflow-y: auto; /* Scroll jika konten kepanjangan */
+      
+      padding: 30px;
       position: relative;
       box-shadow: 0 25px 50px rgba(0,0,0,0.25);
       animation: zoomIn 0.3s;
@@ -302,21 +279,21 @@
 
     .modal-content img {
       width: 100%;
-      height: 250px;
+      height: 250px; /* Tinggi gambar di modal */
       object-fit: cover;
       border-radius: 15px;
       margin-bottom: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
     .close {
       position: absolute;
-      top: 20px;
-      right: 25px;
-      font-size: 28px;
-      color: #999;
+      top: 15px;
+      right: 20px;
+      font-size: 32px;
+      color: #bbb;
       cursor: pointer;
-      transition: color 0.3s;
+      line-height: 1;
+      z-index: 10;
     }
     .close:hover { color: #e74c3c; }
 
@@ -361,8 +338,16 @@
 
     @media screen and (max-width: 600px) {
       .controls input, .controls select { width: 100%; }
-      .product-card { width: 100%; }
+      .product-card { width: 100%; } /* Kartu full width di HP */
       .container { padding: 20px; }
+      
+      /* Penyesuaian Modal di HP */
+      .modal-content {
+        padding: 20px;
+      }
+      .modal-content img {
+        height: 200px;
+      }
     }
   </style>
 </head>
@@ -391,23 +376,19 @@
   <div class="container" id="productContainer">
 
     <div class="product-card" data-name="Kaos Polos" data-category="Pakaian" onclick="openModal('Kaos Polos','Rp 75.000','Bahan Cotton Combed 30s adem.',{'Hitam':'Barang/Hitam.png','Putih':'Barang/Putih.png'},'')">
-      <span class="badge">Terlaris</span>
       <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Kaos+Polos'"></div>
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Kaos Polos Premium</h3>
-        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
         <div class="price-row"><p class="price">Rp 75.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
 
     <div class="product-card" data-name="Sepatu Sneakers" data-category="Sepatu" onclick="openModal('Sepatu Sneakers','Rp 250.000','Sneakers kekinian.',{'Hitam':'Barang/celana.jpg','Putih':'Barang/Putih.jpg'},'')">
-      <span class="badge blue">Baru</span>
       <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Sneakers'"></div>
       <div class="product-info">
         <span class="category-text">Sepatu</span>
         <h3>Sepatu Sneakers</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.8)</span></div>
         <div class="price-row"><p class="price">Rp 250.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -417,18 +398,15 @@
       <div class="product-info">
         <span class="category-text">Sepatu</span>
         <h3>Sepatu Sport Run</h3>
-        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
         <div class="price-row"><p class="price">Rp 300.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
 
     <div class="product-card" data-name="Kemeja Flanel" data-category="Pakaian" onclick="openModal('Kemeja Flanel','Rp 150.000','Motif kotak-kotak.',{'Merah':'Barang/Merah.jpg'},'')">
-      <span class="badge purple">Promo</span>
       <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Flanel'"></div>
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Kemeja Flanel</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.5)</span></div>
         <div class="price-row"><p class="price">Rp 150.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -438,7 +416,6 @@
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Jaket Denim Classic</h3>
-        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(4.9)</span></div>
         <div class="price-row"><p class="price">Rp 200.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -448,29 +425,24 @@
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Topi Baseball NY</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.2)</span></div>
         <div class="price-row"><p class="price">Rp 50.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
 
     <div class="product-card" data-name="Sepatu Formal" data-category="Sepatu" onclick="openModal('Sepatu Formal','Rp 400.000','Kulit asli.',{'Coklat':'Barang/Coklat.jpg'},'')">
-      <span class="badge">Premium</span>
       <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Pantofel'"></div>
       <div class="product-info">
         <span class="category-text">Sepatu</span>
         <h3>Sepatu Formal Pantofel</h3>
-        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
         <div class="price-row"><p class="price">Rp 400.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
 
     <div class="product-card" data-name="Kaos Oversize" data-category="Pakaian" onclick="openModal('Kaos Oversize','Rp 85.000','Potongan longgar.',{'Putih':'Barang/Putih.jpg'},'')">
-      <span class="badge blue">Trend</span>
       <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Oversize'"></div>
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Kaos Oversize Street</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.6)</span></div>
         <div class="price-row"><p class="price">Rp 85.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -480,7 +452,6 @@
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Celana Chino Slim</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.4)</span></div>
         <div class="price-row"><p class="price">Rp 120.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -490,7 +461,6 @@
       <div class="product-info">
         <span class="category-text">Sepatu</span>
         <h3>Sepatu Sandal Outdoor</h3>
-        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(4.8)</span></div>
         <div class="price-row"><p class="price">Rp 90.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -500,7 +470,6 @@
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Hoodie Jumper Polos</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.7)</span></div>
         <div class="price-row"><p class="price">Rp 175.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -510,18 +479,15 @@
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Vest Rajut Korea</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.3)</span></div>
         <div class="price-row"><p class="price">Rp 60.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
 
     <div class="product-card" data-name="Celana Jeans" data-category="Pakaian" onclick="openModal('Celana Jeans','Rp 180.000','Slim fit.',{'Biru':'Barang/Biru.jpg'},'')">
-      <span class="badge blue">Baru</span>
       <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Jeans'"></div>
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Celana Jeans Pria</h3>
-        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(4.9)</span></div>
         <div class="price-row"><p class="price">Rp 180.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -531,18 +497,15 @@
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Topi Kupluk Beanie</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.5)</span></div>
         <div class="price-row"><p class="price">Rp 45.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
 
     <div class="product-card" data-name="Sepatu Boots" data-category="Sepatu" onclick="openModal('Sepatu Boots','Rp 350.000','Kulit sintetis.',{'Coklat':'Barang/Coklat.jpg'},'')">
-      <span class="badge">Limited</span>
       <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Boots'"></div>
       <div class="product-info">
         <span class="category-text">Sepatu</span>
         <h3>Sepatu Boots Klasik</h3>
-        <div class="rating">★★★★★ <span style="font-size:11px;color:#ccc">(5.0)</span></div>
         <div class="price-row"><p class="price">Rp 350.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -552,7 +515,6 @@
       <div class="product-info">
         <span class="category-text">Pakaian</span>
         <h3>Jaket Bomber Army</h3>
-        <div class="rating">★★★★☆ <span style="font-size:11px;color:#ccc">(4.7)</span></div>
         <div class="price-row"><p class="price">Rp 220.000</p><div class="action-btn">➔</div></div>
       </div>
     </div>
@@ -717,7 +679,9 @@
       colorSelect.onchange = updatePreview;
       document.getElementById("sizeSelect").onchange = updatePreview;
       updatePreview();
-      document.getElementById("productModal").style.display = "block";
+      
+      // Update: Menggunakan FLEX agar center di semua device
+      document.getElementById("productModal").style.display = "flex";
     }
 
     function closeModal() {
