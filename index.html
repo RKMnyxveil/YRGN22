@@ -21,7 +21,7 @@
     header {
       background: #2c3e50;
       color: white;
-      padding: 15px 5%; /* Padding kiri kanan responsif */
+      padding: 15px 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -91,11 +91,11 @@
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 25px; /* Jarak antar kartu */
-      padding: 0 20px 40px 20px;
+      gap: 25px;
+      padding: 0 20px 20px 20px;
       max-width: 1200px;
       margin: 0 auto;
-      flex: 1; /* Agar footer terdorong ke bawah */
+      /* Tidak menggunakan flex:1 disini agar footer flow normal */
     }
 
     /* --- KARTU PRODUK --- */
@@ -107,7 +107,7 @@
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      display: flex;
+      display: flex; /* Default display flex, nanti diatur JS */
       flex-direction: column;
     }
 
@@ -148,9 +148,47 @@
 
     .price {
       font-size: 16px;
-      color: #e67e22; /* Warna oranye untuk harga */
+      color: #e67e22;
       font-weight: bold;
       margin: 0;
+    }
+
+    /* --- PAGINATION (Navigasi Halaman) --- */
+    .pagination-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      margin-bottom: 30px;
+      flex: 1; /* Mendorong footer ke bawah jika produk sedikit */
+    }
+
+    .page-btn {
+      background: white;
+      border: 1px solid #ddd;
+      color: #333;
+      padding: 10px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: all 0.3s;
+      font-weight: bold;
+    }
+
+    .page-btn:hover {
+      background: #f1f1f1;
+      border-color: #ccc;
+    }
+
+    .page-btn.active {
+      background: #2c3e50;
+      color: white;
+      border-color: #2c3e50;
+    }
+
+    .page-btn:disabled {
+      background: #eee;
+      color: #aaa;
+      cursor: not-allowed;
     }
 
     /* --- MODAL --- */
@@ -164,7 +202,7 @@
       height: 100%;
       overflow: auto;
       background-color: rgba(0,0,0,0.6);
-      backdrop-filter: blur(5px); /* Efek blur di belakang modal */
+      backdrop-filter: blur(5px);
     }
 
     .modal-content {
@@ -201,7 +239,6 @@
       font-weight: bold;
       color: #999;
       cursor: pointer;
-      transition: color 0.2s;
     }
 
     .close:hover {
@@ -256,20 +293,11 @@
       margin-top: auto;
     }
 
-    /* --- RESPONSIF --- */
     @media screen and (max-width: 600px) {
-      .controls input {
+      .controls input, .controls select, .product-card {
         width: 100%;
       }
-      .controls select {
-        width: 100%;
-      }
-      .product-card {
-        width: 100%; /* Penuh di layar HP */
-      }
-      header {
-        justify-content: center;
-      }
+      header { justify-content: center; }
     }
   </style>
 </head>
@@ -277,7 +305,7 @@
 
   <header>
     <div class="logo-container">
-      <img src="Logo/Logo Yrgn copy.png" alt="Logo" onerror="this.style.display='none'"> 
+      <img src="Logo/Logo Yrgn copy.png" alt="Logo" onerror="this.style.display='none'">
       <div class="brand-outline">
         <h1>YR STORE</h1>
       </div>
@@ -285,8 +313,8 @@
   </header>
 
   <div class="controls">
-    <input type="text" id="searchInput" onkeyup="filterProducts()" placeholder="🔍 Cari nama produk...">
-    <select id="categorySelect" onchange="filterProducts()">
+    <input type="text" id="searchInput" onkeyup="updateFilter()" placeholder="🔍 Cari nama produk...">
+    <select id="categorySelect" onchange="updateFilter()">
       <option value="all">📂 Semua Kategori</option>
       <option value="Pakaian">👕 Pakaian</option>
       <option value="Sepatu">👟 Sepatu</option>
@@ -294,117 +322,75 @@
   </div>
 
   <div class="container" id="productContainer">
-
-    <div class="product-card" 
-         data-name="Kaos Polos" 
-         data-category="Pakaian"
-         onclick="openModal(
-           'Kaos Polos',
-           'Rp 75.000',
-           'Kaos polos bahan katun premium, nyaman dipakai sehari-hari.',
-           {
-             'Merah':'Barang/Merah.png',
-             'Hitam':'Barang/Hitam.png',
-             'Putih':'Barang/Putih.png'
-           },
-           'https://wa.me/6282223108015?text='
-         )">
-      <img src="Barang/baju.jpg" alt="Kaos Polos" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-      <div class="product-info">
-        <span class="category-badge">Pakaian</span>
-        <h3>Kaos Polos</h3>
-        <p class="price">Rp 75.000</p>
-      </div>
+    <div class="product-card" data-name="Kaos Polos" data-category="Pakaian" onclick="openModal('Kaos Polos','Rp 75.000','Kaos nyaman.',{'Hitam':'Barang/Hitam.png'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kaos+1'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Kaos Polos 1</h3><p class="price">Rp 75.000</p></div>
+    </div>
+    <div class="product-card" data-name="Sepatu Sneakers" data-category="Sepatu" onclick="openModal('Sepatu Sneakers','Rp 250.000','Sepatu keren.',{'Hitam':'Barang/celana.jpg'},'')">
+      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sepatu+2'">
+      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Sneakers 2</h3><p class="price">Rp 250.000</p></div>
+    </div>
+    <div class="product-card" data-name="Sepatu Sport" data-category="Sepatu" onclick="openModal('Sepatu Sport','Rp 300.000','Sepatu lari.',{'Biru':'Barang/Biru.jpg'},'')">
+      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sepatu+3'">
+      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Sport 3</h3><p class="price">Rp 300.000</p></div>
+    </div>
+    <div class="product-card" data-name="Kemeja Flanel" data-category="Pakaian" onclick="openModal('Kemeja Flanel','Rp 150.000','Kemeja kotak.',{'Merah':'Barang/Merah.jpg'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kemeja+4'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Kemeja Flanel 4</h3><p class="price">Rp 150.000</p></div>
+    </div>
+    <div class="product-card" data-name="Jaket Denim" data-category="Pakaian" onclick="openModal('Jaket Denim','Rp 200.000','Jaket Jeans.',{'Biru':'Barang/Biru.jpg'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Jaket+5'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Jaket Denim 5</h3><p class="price">Rp 200.000</p></div>
+    </div>
+    <div class="product-card" data-name="Topi Baseball" data-category="Pakaian" onclick="openModal('Topi Baseball','Rp 50.000','Topi keren.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Topi+6'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Topi Baseball 6</h3><p class="price">Rp 50.000</p></div>
+    </div>
+    <div class="product-card" data-name="Sepatu Formal" data-category="Sepatu" onclick="openModal('Sepatu Formal','Rp 400.000','Sepatu kulit.',{'Coklat':'Barang/Coklat.jpg'},'')">
+      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sepatu+7'">
+      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Formal 7</h3><p class="price">Rp 400.000</p></div>
+    </div>
+    <div class="product-card" data-name="Kaos Oversize" data-category="Pakaian" onclick="openModal('Kaos Oversize','Rp 85.000','Kaos besar.',{'Putih':'Barang/Putih.jpg'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Kaos+8'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Kaos Oversize 8</h3><p class="price">Rp 85.000</p></div>
+    </div>
+    <div class="product-card" data-name="Celana Chino" data-category="Pakaian" onclick="openModal('Celana Chino','Rp 120.000','Celana panjang.',{'Krem':'Barang/Krem.jpg'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Celana+9'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Celana Chino 9</h3><p class="price">Rp 120.000</p></div>
+    </div>
+    <div class="product-card" data-name="Sepatu Sandal" data-category="Sepatu" onclick="openModal('Sepatu Sandal','Rp 90.000','Sandal gunung.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Sandal+10'">
+      <div class="product-info"><span class="category-badge">Sepatu</span><h3>Sepatu Sandal 10</h3><p class="price">Rp 90.000</p></div>
+    </div>
+    <div class="product-card" data-name="Hoodie Polos" data-category="Pakaian" onclick="openModal('Hoodie Polos','Rp 175.000','Hoodie hangat.',{'Abu':'Barang/Abu.jpg'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Hoodie+11'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Hoodie Polos 11</h3><p class="price">Rp 175.000</p></div>
+    </div>
+    <div class="product-card" data-name="Vest Rajut" data-category="Pakaian" onclick="openModal('Vest Rajut','Rp 60.000','Rompi rajut.',{'Krem':'Barang/Krem.jpg'},'')">
+      <img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x200?text=Vest+12'">
+      <div class="product-info"><span class="category-badge">Pakaian</span><h3>Vest Rajut 12</h3><p class="price">Rp 60.000</p></div>
     </div>
 
-    <div class="product-card" 
-         data-name="Sepatu Sneakers" 
-         data-category="Sepatu"
-         onclick="openModal(
-           'Sepatu Sneakers',
-           'Rp 250.000',
-           'Sepatu sneakers trendy, cocok untuk jalan santai maupun olahraga.',
-           {
-             'Hitam':'Barang/celana hitam.png',
-             'Putih':'Barang/celana putih.png',
-             'Biru':'Barang/Celana Biru.png'
-           },
-           'https://wa.me/6282223108015?text='
-         )">
-      <img src="Barang/celana.jpg" alt="Sepatu Sneakers" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-      <div class="product-info">
-        <span class="category-badge">Sepatu</span>
-        <h3>Sepatu Sneakers</h3>
-        <p class="price">Rp 250.000</p>
-      </div>
+  </div>
+
+  <div class="pagination-container" id="paginationControls">
     </div>
 
-    <div class="product-card" 
-         data-name="Sepatu Sport" 
-         data-category="Sepatu"
-         onclick="openModal(
-           'Sepatu Sport',
-           'Rp 300.000',
-           'Sepatu olahraga yang ringan dan kuat.',
-           {
-             'Hitam':'Barang/celana hitam.png',
-             'Biru':'Barang/Celana Biru.png'
-           },
-           'https://wa.me/6282223108015?text='
-         )">
-      <img src="Barang/celana.jpg" alt="Sepatu Sport" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-      <div class="product-info">
-        <span class="category-badge">Sepatu</span>
-        <h3>Sepatu Sport</h3>
-        <p class="price">Rp 300.000</p>
-      </div>
-    </div>
-
-    <div class="product-card" 
-         data-name="Kemeja Flanel" 
-         data-category="Pakaian"
-         onclick="openModal(
-           'Kemeja Flanel',
-           'Rp 150.000',
-           'Kemeja flanel kotak-kotak bahan adem.',
-           {
-             'Merah':'Barang/Merah.png',
-             'Hitam':'Barang/Hitam.png'
-           },
-           'https://wa.me/6282223108015?text='
-         )">
-      <img src="Barang/baju.jpg" alt="Kemeja Flanel" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-      <div class="product-info">
-        <span class="category-badge">Pakaian</span>
-        <h3>Kemeja Flanel</h3>
-        <p class="price">Rp 150.000</p>
-      </div>
-    </div>
-
-  </div> <div id="productModal" class="modal">
+  <div id="productModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
       <img id="modalImage" src="" alt="Produk">
-      <h2 id="modalName">Nama Produk</h2>
+      <h2 id="modalName"></h2>
       <p id="modalPrice" style="color:#e67e22; font-weight:bold; font-size:18px;"></p>
-      <p id="modalDesc" style="color:#666; font-size:14px; margin-bottom:20px;"></p>
-
-      <label for="colorSelect">Pilih Warna:</label>
+      <p id="modalDesc" style="color:#666; font-size:14px;"></p>
+      <label>Pilih Warna:</label>
       <select id="colorSelect" class="select-box"></select>
-
-      <label for="sizeSelect">Pilih Ukuran:</label>
+      <label>Pilih Ukuran:</label>
       <select id="sizeSelect" class="select-box">
-        <option value="S">S</option>
-        <option value="M">M</option>
-        <option value="L">L</option>
-        <option value="XL">XL</option>
+        <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option>
       </select>
-
       <p id="confirmationText" style="margin:15px 0; font-size:13px; color:#555; background:#f0f0f0; padding:10px; border-radius:5px;"></p>
-
-      <a id="modalBuy" class="buy-btn" href="#" target="_blank">
-        <span style="font-size:18px; vertical-align:middle;"></span> Beli via WhatsApp
-      </a>
+      <a id="modalBuy" class="buy-btn" href="#" target="_blank"> Beli via WhatsApp</a>
     </div>
   </div>
 
@@ -417,105 +403,143 @@
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // --- FUNGSI MODAL ---
+    // --- CONFIG PAGINATION ---
+    const ITEMS_PER_PAGE = 9;
+    let currentPage = 1;
+    let filteredProducts = []; // Menyimpan list produk yang lolos filter pencarian
+    
+    // Ambil semua elemen produk saat pertama load
+    const allProductElements = Array.from(document.getElementsByClassName("product-card"));
+
+    // Inisialisasi awal
+    window.onload = function() {
+      updateFilter(); // Jalankan filter sekali untuk set tampilan awal
+    };
+
+    // --- LOGIKA FILTER & PAGINATION ---
+    function updateFilter() {
+      const searchInput = document.getElementById("searchInput").value.toLowerCase();
+      const categorySelect = document.getElementById("categorySelect").value;
+
+      // 1. Filter dulu semua produk berdasarkan Search & Kategori
+      filteredProducts = allProductElements.filter(card => {
+        const name = card.getAttribute("data-name").toLowerCase();
+        const category = card.getAttribute("data-category");
+        
+        const matchSearch = name.includes(searchInput);
+        const matchCategory = categorySelect === "all" || category === categorySelect;
+
+        return matchSearch && matchCategory;
+      });
+
+      // 2. Reset ke halaman 1 setiap kali filter berubah
+      currentPage = 1;
+
+      // 3. Render Halaman
+      renderPagination();
+    }
+
+    function renderPagination() {
+      const totalItems = filteredProducts.length;
+      const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+      // A. Tampilkan/Sembunyikan Kartu Produk
+      // Sembunyikan SEMUA produk dulu
+      allProductElements.forEach(el => el.style.display = "none");
+
+      // Tentukan index awal dan akhir untuk halaman saat ini
+      const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+      const endIndex = startIndex + ITEMS_PER_PAGE;
+
+      // Ambil slice produk yang harus tampil, lalu set display block/flex
+      const itemsToShow = filteredProducts.slice(startIndex, endIndex);
+      itemsToShow.forEach(el => el.style.display = "flex");
+
+      // B. Buat Tombol Pagination
+      const paginationContainer = document.getElementById("paginationControls");
+      paginationContainer.innerHTML = ""; // Bersihkan tombol lama
+
+      if (totalPages > 1) {
+        // Tombol Prev
+        const prevBtn = document.createElement("button");
+        prevBtn.innerText = "« Prev";
+        prevBtn.className = "page-btn";
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => changePage(currentPage - 1);
+        paginationContainer.appendChild(prevBtn);
+
+        // Tombol Angka
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement("button");
+          btn.innerText = i;
+          btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+          btn.onclick = () => changePage(i);
+          paginationContainer.appendChild(btn);
+        }
+
+        // Tombol Next
+        const nextBtn = document.createElement("button");
+        nextBtn.innerText = "Next »";
+        nextBtn.className = "page-btn";
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => changePage(currentPage + 1);
+        paginationContainer.appendChild(nextBtn);
+      }
+      
+      // Jika tidak ada produk ditemukan
+      if (totalItems === 0) {
+        paginationContainer.innerHTML = "<p style='color:#666;'>Produk tidak ditemukan.</p>";
+      }
+    }
+
+    function changePage(pageNum) {
+      currentPage = pageNum;
+      renderPagination();
+      // Scroll ke atas container produk agar user tahu halaman berubah
+      document.getElementById("productContainer").scrollIntoView({behavior: "smooth"});
+    }
+
+    // --- LOGIKA MODAL (Sama seperti sebelumnya) ---
     function openModal(name, price, desc, images, linkBase) {
       document.getElementById("modalName").innerText = name;
       document.getElementById("modalPrice").innerText = price;
       document.getElementById("modalDesc").innerText = desc;
-
       const colorSelect = document.getElementById("colorSelect");
       colorSelect.innerHTML = "";
-
-      // Isi dropdown warna
       Object.keys(images).forEach(color => {
         const option = document.createElement("option");
         option.value = color;
         option.text = color;
         colorSelect.appendChild(option);
       });
+      if(Object.keys(images).length > 0) colorSelect.value = Object.keys(images)[0];
 
-      // Default pilih warna pertama
-      if(Object.keys(images).length > 0) {
-        colorSelect.value = Object.keys(images)[0];
-      }
-
-      // Fungsi update tampilan di dalam modal
       function updatePreview() {
         const color = colorSelect.value;
         const size = document.getElementById("sizeSelect").value;
-        // Ambil gambar berdasarkan warna, jika tidak ada pakai placeholder
         const imageUrl = images[color] || 'https://via.placeholder.com/300'; 
-
         document.getElementById("modalImage").src = imageUrl;
-        document.getElementById("confirmationText").innerText = 
-          `Pilihan: Warna ${color}, Ukuran ${size}`;
-
-        // Format Pesan WA
-        const message = `Halo Admin YR STORE,
-Saya ingin memesan produk berikut:
-------------------------------
-Produk : ${name}
-Harga  : ${price}
-Warna  : ${color}
-Ukuran : ${size}
-------------------------------
-Mohon info total harga dan ongkos kirim. Terima kasih.`;
-
-        const encoded = encodeURIComponent(message);
-        // Pastikan linkBase tidak null
-        const safeLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
-        // Kita hanya mengambil base URL dari parameter link, lalu menempelkan text
-        // (Di kode html di atas, saya set linkBase ke "https://wa.me/...?text=")
-        // Jadi kita perlu manipulasi string sedikit agar tidak double "?text=" jika sudah ada
+        document.getElementById("confirmationText").innerText = `Pilihan: Warna ${color}, Ukuran ${size}`;
         
-        let finalLink = safeLink;
-        if(!safeLink.includes("text=")) {
-           finalLink += "&text=";
-        }
+        let finalLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
+        if(!finalLink.includes("text=")) finalLink += "&text=";
         
-        document.getElementById("modalBuy").href = finalLink + encoded;
+        const message = `Halo Admin, saya mau beli:\nProduk: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}`;
+        document.getElementById("modalBuy").href = finalLink + encodeURIComponent(message);
       }
 
       colorSelect.onchange = updatePreview;
       document.getElementById("sizeSelect").onchange = updatePreview;
-
-      updatePreview(); // Jalankan sekali saat buka
+      updatePreview();
       document.getElementById("productModal").style.display = "block";
     }
 
     function closeModal() {
       document.getElementById("productModal").style.display = "none";
     }
-
-    // Tutup modal jika klik di luar area konten
     window.onclick = function(event) {
-      const modal = document.getElementById("productModal");
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-
-    // --- FUNGSI FILTER & SEARCH (Yang tadi hilang) ---
-    function filterProducts() {
-      const searchInput = document.getElementById("searchInput").value.toLowerCase();
-      const categorySelect = document.getElementById("categorySelect").value;
-      const products = document.getElementsByClassName("product-card");
-
-      for (let i = 0; i < products.length; i++) {
-        const productName = products[i].getAttribute("data-name").toLowerCase();
-        const productCategory = products[i].getAttribute("data-category");
-
-        const matchesSearch = productName.includes(searchInput);
-        const matchesCategory = categorySelect === "all" || productCategory === categorySelect;
-
-        if (matchesSearch && matchesCategory) {
-          products[i].style.display = ""; // Tampilkan (flex)
-        } else {
-          products[i].style.display = "none"; // Sembunyikan
-        }
-      }
+      if (event.target == document.getElementById("productModal")) closeModal();
     }
   </script>
-
 </body>
 </html>
