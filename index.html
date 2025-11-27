@@ -17,6 +17,16 @@
       min-height: 100vh;
     }
 
+    /* --- STICKY NAV WRAPPER (BARU) --- */
+    /* Ini wadah pembungkus Header & Controls agar menempel bersamaan */
+    .sticky-nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: #f0f2f5; /* Warna background agar tidak transparan saat discroll */
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
     /* --- HEADER --- */
     header {
       background: #2c3e50;
@@ -25,10 +35,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-      position: sticky;
-      top: 0;
-      z-index: 100;
+      /* position: sticky; <-- DIHAPUS, dipindah ke .sticky-nav */
     }
 
     .logo-container {
@@ -58,18 +65,19 @@
     /* --- CONTROLS (Pencarian) --- */
     .controls {
       background: white;
-      padding: 20px;
+      padding: 15px 20px;
       text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      margin-bottom: 20px;
       display: flex;
       justify-content: center;
       gap: 10px;
       flex-wrap: wrap;
+      /* Margin bottom dihapus agar menyatu dengan container produk saat scroll */
+      margin-bottom: 0; 
+      border-bottom: 1px solid #ddd;
     }
 
     .controls input, .controls select {
-      padding: 12px 15px;
+      padding: 10px 15px;
       font-size: 16px;
       border-radius: 8px;
       border: 1px solid #ddd;
@@ -92,7 +100,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 25px;
-      padding: 0 20px 20px 20px;
+      padding: 30px 20px 20px 20px; /* Tambah padding atas agar tidak tertutup nav */
       max-width: 1200px;
       margin: 0 auto;
     }
@@ -106,7 +114,7 @@
       overflow: hidden;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-      display: flex; /* Default display flex, nanti diatur JS */
+      display: flex;
       flex-direction: column;
     }
 
@@ -152,14 +160,14 @@
       margin: 0;
     }
 
-    /* --- PAGINATION (Navigasi Halaman) --- */
+    /* --- PAGINATION --- */
     .pagination-container {
       display: flex;
       justify-content: center;
       gap: 10px;
       padding: 20px;
       margin-bottom: 30px;
-      flex: 1; /* Mendorong footer ke bawah */
+      flex: 1;
     }
 
     .page-btn {
@@ -194,7 +202,7 @@
     .modal {
       display: none;
       position: fixed;
-      z-index: 1000;
+      z-index: 2000; /* Z-index harus lebih tinggi dari navbar (1000) */
       left: 0;
       top: 0;
       width: 100%;
@@ -296,28 +304,33 @@
       .controls input, .controls select, .product-card {
         width: 100%;
       }
+      .controls {
+        flex-direction: column;
+      }
       header { justify-content: center; }
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <div class="logo-container">
-      <img src="Logo/Logo Yrgn copy.png" alt="Logo" onerror="this.style.display='none'">
-      <div class="brand-outline">
-        <h1>YR STORE</h1>
+  <div class="sticky-nav">
+    <header>
+      <div class="logo-container">
+        <img src="Logo/Logo Yrgn copy.png" alt="Logo" onerror="this.style.display='none'">
+        <div class="brand-outline">
+          <h1>YR STORE</h1>
+        </div>
       </div>
-    </div>
-  </header>
+    </header>
 
-  <div class="controls">
-    <input type="text" id="searchInput" onkeyup="updateFilter()" placeholder="🔍 Cari nama produk...">
-    <select id="categorySelect" onchange="updateFilter()">
-      <option value="all">📂 Semua Kategori</option>
-      <option value="Pakaian">👕 Pakaian</option>
-      <option value="Sepatu">👟 Sepatu</option>
-    </select>
+    <div class="controls">
+      <input type="text" id="searchInput" onkeyup="updateFilter()" placeholder="🔍 Cari nama produk...">
+      <select id="categorySelect" onchange="updateFilter()">
+        <option value="all">📂 Semua Kategori</option>
+        <option value="Pakaian">👕 Pakaian</option>
+        <option value="Sepatu">👟 Sepatu</option>
+      </select>
+    </div>
   </div>
 
   <div class="container" id="productContainer">
@@ -420,7 +433,7 @@
     document.getElementById("year").textContent = new Date().getFullYear();
 
     // --- CONFIG PAGINATION ---
-    const ITEMS_PER_PAGE = 12; // <--- SUDAH DIUBAH MENJADI 12
+    const ITEMS_PER_PAGE = 12; 
     let currentPage = 1;
     let filteredProducts = []; 
     
