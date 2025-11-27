@@ -386,4 +386,32 @@ function closeModal() {
   document.getElementById("productModal").style.display = "none";
 }
 
+
+function filterProducts() {
+  // 1. Ambil nilai dari input pencarian dan dropdown kategori
+  const searchInput = document.getElementById("searchInput").value.toLowerCase();
+  const categorySelect = document.getElementById("categorySelect").value;
+  
+  // 2. Ambil semua kartu produk
+  const products = document.getElementsByClassName("product-card");
+
+  // 3. Loop melalui setiap produk untuk mengecek apakah sesuai kriteria
+  for (let i = 0; i < products.length; i++) {
+    const productName = products[i].getAttribute("data-name").toLowerCase();
+    const productCategory = products[i].getAttribute("data-category");
+
+    // Cek apakah nama produk mengandung kata kunci pencarian
+    const matchesSearch = productName.includes(searchInput);
+    
+    // Cek apakah kategori cocok (atau jika memilih 'all')
+    const matchesCategory = categorySelect === "all" || productCategory === categorySelect;
+
+    // 4. Tampilkan atau sembunyikan produk
+    if (matchesSearch && matchesCategory) {
+      products[i].style.display = ""; // Tampilkan (default css)
+    } else {
+      products[i].style.display = "none"; // Sembunyikan
+    }
+  }
+}
 </script>
