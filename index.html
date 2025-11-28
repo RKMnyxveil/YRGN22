@@ -6,7 +6,7 @@
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>YRGN22 STORE - Full Image View</title>
+  <title>YRGN22 STORE - Offline Mode</title>
   <style>
     /* --- 1. RESET & BASIC --- */
     body {
@@ -735,10 +735,10 @@
   }
 
   // ==============================================
-  // ✅ ADMIN PANEL + MANAJEMEN PRODUK (localStorage)
+  // ✅ ADMIN PANEL + MANAJEMEN PRODUK (DENGAN FILE GAMBAR)
   // ==============================================
 
-  const ADMIN_PASSWORD = "admin123"; // Ganti jika perlu
+  const ADMIN_PASSWORD = "admin123";
 
   // Akses admin dengan Alt + A
   document.addEventListener('keydown', (e) => {
@@ -785,6 +785,20 @@
     });
   }
 
+  // Fungsi: baca file → data URL
+  function readFileAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve('');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
   let colorCount = 0;
   let isEditing = false;
   let currentEditId = null;
@@ -793,10 +807,31 @@
     colorCount++;
     const div = document.createElement('div');
     div.innerHTML = `
-      Warna <input type="text" placeholder="Nama warna" id="colorName${colorCount}" style="width:45%; padding:6px; margin:4px 5px 4px 0; border:1px solid #ccc; border-radius:4px;">
-      URL <input type="text" placeholder="URL gambar warna" id="colorImg${colorCount}" style="width:48%; padding:6px; margin:4px 0; border:1px solid #ccc; border-radius:4px;">
+      <div style="margin:10px 0; padding:8px; background:#f9f9f9; border-radius:6px;">
+        <input type="text" placeholder="Nama warna" id="colorName${colorCount}" style="width:100%; padding:6px; margin-bottom:6px; border:1px solid #ccc; border-radius:4px;">
+        <label style="display:block; margin-bottom:4px; font-size:12px;">Gambar Warna:</label>
+        <input type="file" id="colorImgFile${colorCount}" accept="image/*" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px;">
+        <img id="colorPreview${colorCount}" src="" alt="Preview" style="max-width:100%; max-height:100px; margin-top:6px; display:none; border-radius:4px;">
+      </div>
     `;
     document.getElementById('colorFields').appendChild(div);
+
+    // Preview untuk warna
+    const fileInput = document.getElementById(`colorImgFile${colorCount}`);
+    const preview = document.getElementById(`colorPreview${colorCount}`);
+    if (fileInput && preview) {
+      fileInput.onchange = () => {
+        const file = fileInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            preview.src = reader.result;
+            preview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    }
   }
 
   function loadColorFields() {
@@ -805,29 +840,32 @@
     addColorField();
   }
 
-  function saveProduct() {
+  async function saveProduct() {
     const name = document.getElementById('newProdName').value.trim();
     const price = document.getElementById('newProdPrice').value.trim();
     const desc = document.getElementById('newProdDesc').value.trim();
     const category = document.getElementById('newProdCategory').value;
-    const mainImg = document.getElementById('newProdImg').value.trim();
+    const mainFile = document.getElementById('newProdImgFile').files[0];
 
-    if (!name || !price || !desc || !category || !mainImg) {
-      alert('Harap isi semua kolom wajib!');
+    if (!name || !price || !desc || !category || !mainFile) {
+      alert('Harap isi semua kolom wajib dan pilih gambar utama!');
       return;
     }
+
+    const mainImgData = await readFileAsDataURL(mainFile);
 
     const colors = {};
     for (let i = 1; i <= colorCount; i++) {
       const colorName = document.getElementById(`colorName${i}`)?.value?.trim();
-      const colorImg = document.getElementById(`colorImg${i}`)?.value?.trim();
-      if (colorName && colorImg) {
-        colors[colorName] = colorImg;
+      const colorFile = document.getElementById(`colorImgFile${i}`)?.files[0];
+      if (colorName && colorFile) {
+        const colorImgData = await readFileAsDataURL(colorFile);
+        colors[colorName] = colorImgData;
       }
     }
 
     if (Object.keys(colors).length === 0) {
-      alert('Harap tambahkan minimal 1 warna dengan URL gambarnya!');
+      alert('Harap tambahkan minimal 1 warna dengan gambar!');
       return;
     }
 
@@ -836,14 +874,14 @@
     if (isEditing) {
       const index = products.findIndex(p => p.id === currentEditId);
       if (index !== -1) {
-        products[index] = { id: currentEditId, name, price, desc, category, mainImg, colors };
+        products[index] = { id: currentEditId, name, price, desc, category, mainImg: mainImgData, colors };
       }
     } else {
-      products.push({ id: generateUUID(), name, price, desc, category, mainImg, colors });
+      products.push({ id: generateUUID(), name, price, desc, category, mainImg: mainImgData, colors });
     }
 
     localStorage.setItem('customProducts', JSON.stringify(products));
-    alert(isEditing ? '✅ Produk berhasil diperbarui!' : '✅ Produk berhasil ditambahkan!');
+    alert(isEditing ? '✅ Produk diperbarui!' : '✅ Produk ditambahkan!');
     listAllProducts();
     renderCustomProducts();
   }
@@ -870,18 +908,35 @@
     document.getElementById('newProdPrice').value = prod.price;
     document.getElementById('newProdDesc').value = prod.desc;
     document.getElementById('newProdCategory').value = prod.category;
-    document.getElementById('newProdImg').value = prod.mainImg;
 
+    // Preview gambar utama
+    const mainPreview = document.getElementById('mainImgPreview');
+    if (mainPreview) {
+      mainPreview.src = prod.mainImg;
+      mainPreview.style.display = 'block';
+    }
+
+    // Isi warna
     colorCount = 0;
     const colorFieldsDiv = document.getElementById('colorFields');
     colorFieldsDiv.innerHTML = '';
     Object.entries(prod.colors).forEach(([colorName, imgUrl]) => {
       addColorField();
       document.getElementById(`colorName${colorCount}`).value = colorName;
-      document.getElementById(`colorImg${colorCount}`).value = imgUrl;
+      const preview = document.getElementById(`colorPreview${colorCount}`);
+      if (preview) {
+        preview.src = imgUrl;
+        preview.style.display = 'block';
+      }
     });
 
     document.getElementById('adminPanelModal').scrollTo({ top: 500, behavior: 'smooth' });
+  }
+
+  function cancelEdit() {
+    isEditing = false;
+    currentEditId = null;
+    listAllProducts();
   }
 
   function listAllProducts() {
@@ -916,9 +971,14 @@
         <option value="Sepatu">Sepatu</option>
         <option value="Tumbler">Tumbler</option>
       </select>
-      <input type="text" id="newProdImg" placeholder="URL Gambar Utama" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
-      <div id="colorFields" style="margin-top:10px;"></div>
+
+      <label style="display:block; margin:8px 0 4px 0; font-size:13px;">Gambar Utama (Pilih File)</label>
+      <input type="file" id="newProdImgFile" accept="image/*" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px;">
+      <img id="mainImgPreview" src="" alt="Preview" style="max-width:100%; max-height:150px; margin:8px 0; display:none; border-radius:6px;">
+
+      <div id="colorFields" style="margin-top:15px;"></div>
       <button type="button" onclick="addColorField()" style="margin:5px 0; background:#f1f1f1; border:1px solid #ccc; padding:5px 10px; border-radius:4px; font-size:12px;">+ Tambah Warna</button>
+
       <button onclick="saveProduct()" style="width:100%; margin-top:15px; padding:12px; background:${isEditing ? '#f39c12' : '#27ae60'}; color:white; border:none; border-radius:8px; cursor:pointer;">
         ${isEditing ? '💾 Simpan Perubahan' : '✅ Tambah Produk'}
       </button>
@@ -927,12 +987,23 @@
 
     container.innerHTML = html;
     loadColorFields();
-  }
 
-  function cancelEdit() {
-    isEditing = false;
-    currentEditId = null;
-    listAllProducts();
+    // Preview gambar utama
+    const mainFileInput = document.getElementById('newProdImgFile');
+    const mainPreview = document.getElementById('mainImgPreview');
+    if (mainFileInput && mainPreview) {
+      mainFileInput.onchange = () => {
+        const file = mainFileInput.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            mainPreview.src = reader.result;
+            mainPreview.style.display = 'block';
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    }
   }
 
   function renderCustomProducts() {
@@ -962,7 +1033,6 @@
       container.appendChild(card);
     });
 
-    // Gabungkan dengan produk bawaan untuk filter
     const updatedAll = Array.from(document.getElementsByClassName("product-card"));
     allProductElements.length = 0;
     allProductElements.push(...updatedAll);
@@ -973,7 +1043,7 @@
     renderCustomProducts();
   });
 
-  // Expose fungsi ke global scope agar bisa dipanggil dari onclick
+  // Expose ke global
   window.closeAdminLogin = closeAdminLogin;
   window.loginAdmin = loginAdmin;
   window.closeAdminPanel = closeAdminPanel;
