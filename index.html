@@ -135,7 +135,7 @@
     .product-card img {
       width: 100%;
       height: 100%;
-      object-fit: cover; /* Di kartu depan tetap cover agar rapi */
+      object-fit: cover;
       transition: transform 0.6s ease;
     }
 
@@ -275,13 +275,12 @@
       to { opacity: 1; transform: scale(1); }
     }
 
-    /* --- PERBAIKAN GAMBAR MODAL AGAR TIDAK TERPOTONG --- */
     .modal-content img {
       width: 100%;
-      height: auto; /* Biarkan tinggi menyesuaikan */
-      max-height: 300px; /* Batasi maksimal tinggi di Laptop */
-      object-fit: contain; /* KUNCI: Gambar utuh, tidak dicrop */
-      background-color: #f8f9fa; /* Background abu tipis agar rapi */
+      height: auto;
+      max-height: 300px;
+      object-fit: contain;
+      background-color: #f8f9fa;
       border-radius: 10px;
       margin-bottom: 20px;
       border: 1px solid #eee;
@@ -340,61 +339,32 @@
       margin-top: auto;
     }
 
-    /* --- KHUSUS TAMPILAN HP (RESPONSIF) --- */
+    /* --- RESPONSIVE --- */
     @media screen and (max-width: 600px) {
       .controls input, .controls select { width: 100%; }
       .product-card { width: 100%; }
       .container { padding: 20px; }
 
       .modal-content {
-        padding: 20px 20px 25px 20px; 
-        width: 95%; 
+        padding: 20px;
+        width: 95%;
         max-height: 90vh;
       }
 
-      /* PERBAIKAN GAMBAR MODAL DI HP */
       .modal-content img {
-        max-height: 200px; /* Batasi tinggi gambar di HP */
-        object-fit: contain; /* Pastikan tetap utuh (tidak terpotong) */
+        max-height: 200px;
+        object-fit: contain;
         margin-bottom: 15px;
       }
 
-      .modal-content h2 {
-        font-size: 18px; 
-        margin-bottom: 5px;
-      }
+      .modal-content h2 { font-size: 18px; }
+      #modalPrice { font-size: 18px !important; }
+      #modalDesc { font-size: 13px !important; }
 
-      #modalPrice {
-        font-size: 18px !important;
-        margin-bottom: 10px !important;
-      }
-
-      #modalDesc {
-        font-size: 13px !important;
-        margin-bottom: 10px;
-      }
-
-      .select-box {
-        padding: 8px; 
-        margin: 5px 0 10px 0;
-        font-size: 14px;
-      }
-
-      label {
-        font-size: 13px;
-        margin-top: 0;
-      }
-
-      .buy-btn {
-        margin-top: 15px; 
-        padding: 12px;
-      }
-      
-      .close {
-        top: 10px;
-        right: 15px;
-        font-size: 28px;
-      }
+      .select-box { padding: 8px; margin: 5px 0 10px 0; font-size: 14px; }
+      label { font-size: 13px; }
+      .buy-btn { margin-top: 15px; padding: 12px; }
+      .close { top: 10px; right: 15px; font-size: 28px; }
     }
   </style>
 </head>
@@ -423,6 +393,7 @@
 
   <div class="container" id="productContainer">
 
+    <!-- Produk Bawaan (Tetap Ada) -->
     <div class="product-card" data-name="Kaos Polos" data-category="Pakaian" onclick="openModal('Kaos Polos','Rp 75.000','Bahan Cotton Combed 30s adem.',{'Hitam':'Barang/Hitam.png','Putih':'Barang/Putih.png'},'')">
       <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Kaos+Polos'"></div>
       <div class="product-info">
@@ -571,6 +542,7 @@
 
   <div class="pagination-container" id="paginationControls"></div>
 
+  <!-- MODAL PRODUK -->
   <div id="productModal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModal()">&times;</span>
@@ -593,6 +565,28 @@
     </div>
   </div>
 
+  <!-- LOGIN ADMIN MODAL -->
+  <div id="adminLoginModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:400px;">
+      <span class="close" onclick="closeAdminLogin()">&times;</span>
+      <h2 style="text-align:center; margin-bottom:20px;">🔐 Login Admin</h2>
+      <input type="password" id="adminPass" placeholder="Masukkan password admin" style="width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
+      <button onclick="loginAdmin()" style="width:100%; padding:12px; background:#2c3e50; color:white; border:none; border-radius:8px; cursor:pointer;">Masuk</button>
+      <p id="adminError" style="color:#e74c3c; font-size:12px; text-align:center; margin-top:10px; display:none;"></p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL MODAL -->
+  <div id="adminPanelModal" class="modal" style="display:none;">
+    <div class="modal-content" style="max-width:600px; max-height:85vh;">
+      <span class="close" onclick="closeAdminPanel()">&times;</span>
+      <div id="productList" style="text-align:left;"></div>
+    </div>
+  </div>
+
+  <!-- TOMBOL ADMIN (TERSEMBUNYI) -->
+  <button id="adminBtn" style="position:fixed; bottom:10px; right:10px; padding:8px 12px; font-size:12px; background:#e74c3c; color:white; border:none; border-radius:4px; cursor:pointer; display:none;">🔐 Admin</button>
+
   <footer class="site-footer">
     <div class="footer-content">
       <p>© <span id="year"></span> RIAN KIA MADO</p>
@@ -603,13 +597,13 @@
   // 1. Update Tahun Otomatis di Footer
   document.getElementById("year").textContent = new Date().getFullYear();
 
-  // [KEAMANAN] Blokir Tombol Developer Tools (F12, Ctrl+Shift+I, Klik Kanan dsb)
+  // [KEAMANAN] Blokir Tombol Developer Tools
   document.onkeydown = function(e) {
-    if(event.keyCode == 123) { return false; } // Blokir F12
-    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; } // Blokir Inspect
+    if(event.keyCode == 123) { return false; }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
     if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } 
     if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } 
-    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; } // Blokir View Source
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
   }
 
   // 2. Konfigurasi Halaman (Pagination)
@@ -617,68 +611,51 @@
   let currentPage = 1;
   let filteredProducts = []; 
   
-  // Ambil semua elemen produk saat pertama load
   const allProductElements = Array.from(document.getElementsByClassName("product-card"));
 
-  // Jalankan saat website pertama kali dibuka
   window.onload = function() {
     updateFilter(); 
   };
 
-  // [KEAMANAN] Fungsi Sanitasi (Pembersih Input Pencarian)
   function sanitizeInput(str) {
     const temp = document.createElement('div');
     temp.textContent = str;
     return temp.innerHTML;
   }
 
-  // 3. Logika Filter & Pencarian
   function updateFilter() {
-    // Ambil input pencarian & bersihkan kodenya
     let rawInput = document.getElementById("searchInput").value;
     const searchInput = sanitizeInput(rawInput).toLowerCase();
-    
-    // Ambil kategori yang dipilih
     const categorySelect = document.getElementById("categorySelect").value;
 
-    // Filter produk
     filteredProducts = allProductElements.filter(card => {
       const name = card.getAttribute("data-name").toLowerCase();
       const category = card.getAttribute("data-category");
-      
       const matchSearch = name.includes(searchInput);
       const matchCategory = categorySelect === "all" || category === categorySelect;
-
       return matchSearch && matchCategory;
     });
 
-    // Reset ke halaman 1 jika filter berubah
     currentPage = 1;
     renderPagination();
   }
 
-  // 4. Logika Pagination (Halaman 1, 2, dst)
   function renderPagination() {
     const totalItems = filteredProducts.length;
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-    // Sembunyikan semua dulu
     allProductElements.forEach(el => el.style.display = "none");
 
-    // Hitung produk mana yang harus muncul
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const itemsToShow = filteredProducts.slice(startIndex, endIndex);
 
-    // Tampilkan produk yang sesuai hitungan
     itemsToShow.forEach(el => el.style.display = "flex");
 
-    // Buat Tombol Navigasi Halaman
     const paginationContainer = document.getElementById("paginationControls");
     paginationContainer.innerHTML = ""; 
 
     if (totalPages > 1) {
-      // Tombol Sebelumnya
       const prevBtn = document.createElement("button");
       prevBtn.innerText = "« Prev";
       prevBtn.className = "page-btn";
@@ -686,7 +663,6 @@
       prevBtn.onclick = () => changePage(currentPage - 1);
       paginationContainer.appendChild(prevBtn);
 
-      // Tombol Angka
       for (let i = 1; i <= totalPages; i++) {
         const btn = document.createElement("button");
         btn.innerText = i;
@@ -695,7 +671,6 @@
         paginationContainer.appendChild(btn);
       }
 
-      // Tombol Berikutnya
       const nextBtn = document.createElement("button");
       nextBtn.innerText = "Next »";
       nextBtn.className = "page-btn";
@@ -704,7 +679,6 @@
       paginationContainer.appendChild(nextBtn);
     }
     
-    // Pesan jika produk kosong
     if (totalItems === 0) {
       paginationContainer.innerHTML = "<p style='color:#999; font-style:italic;'>Produk tidak ditemukan.</p>";
     }
@@ -716,14 +690,12 @@
     window.scrollTo({ top: 0, behavior: 'smooth' }); 
   }
 
-  // 5. FUNGSI UTAMA MODAL (POP UP) - Ini bagian yang Anda tanyakan
+  // 3. FUNGSI MODAL PRODUK
   function openModal(name, price, desc, images, linkBase) {
-    // Isi data dasar ke dalam Pop Up
     document.getElementById("modalName").innerText = name;
     document.getElementById("modalPrice").innerText = price;
     document.getElementById("modalDesc").innerText = desc;
 
-    // Reset dan Isi Pilihan Warna
     const colorSelect = document.getElementById("colorSelect");
     colorSelect.innerHTML = "";
     Object.keys(images).forEach(color => {
@@ -733,60 +705,283 @@
       colorSelect.appendChild(option);
     });
     
-    // Pilih warna pertama sebagai default
     if(Object.keys(images).length > 0) colorSelect.value = Object.keys(images)[0];
 
-    // --- FUNGSI UPDATE TAMPILAN & LINK WA (Nested Function) ---
     function updatePreview() {
-      // Ambil warna dan ukuran yang sedang dipilih user
       const color = colorSelect.value;
       const size = document.getElementById("sizeSelect").value;
-      
-      // Ganti gambar sesuai warna
-      const imageUrl = images[color] || 'https://via.placeholder.com/300'; 
+      const imageUrl = images[color] || 'https://via.placeholder.com/300';
       document.getElementById("modalImage").src = imageUrl;
-      
-      // Update teks konfirmasi kecil di bawah
       document.getElementById("confirmationText").innerText = `Pilihan: Warna ${color}, Ukuran ${size}`;
       
-      // --- BAGIAN PENTING: LINK WHATSAPP ---
-      
-      // 1. Pastikan link dasar aman (jika kosong, pakai nomor default)
       let finalLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
-      
-      // 2. Cek apakah sudah ada "?text=" atau "&text=", jika belum, tambahkan
       if(!finalLink.includes("text=")) finalLink += "&text=";
-      
-      // 3. Susun Pesan
       const message = `Halo Admin YR STORE,\nSaya tertarik membeli:\n------------------\nNama: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}\n------------------\nMohon info stok dan ongkir.`;
-      
-      // 4. ENCODE PESAN (Ini kuncinya!)
-      // encodeURIComponent akan mengubah spasi jadi %20, enter jadi %0A, dll
-      // Supaya link tidak error saat diklik
       document.getElementById("modalBuy").href = finalLink + encodeURIComponent(message);
     }
 
-    // Pasang "Event Listener"
-    // Artinya: Kalau user ganti warna/ukuran, jalankan updatePreview lagi
     colorSelect.onchange = updatePreview;
     document.getElementById("sizeSelect").onchange = updatePreview;
-
-    // Jalankan sekali di awal biar datanya muncul
     updatePreview();
-    
-    // Tampilkan Modal (Gunakan flex agar center)
     document.getElementById("productModal").style.display = "flex";
   }
 
-  // Fungsi Tutup Modal
   function closeModal() {
     document.getElementById("productModal").style.display = "none";
   }
   
-  // Tutup jika klik di luar area putih
   window.onclick = function(event) {
     if (event.target == document.getElementById("productModal")) closeModal();
   }
+
+  // ==============================================
+  // ✅ ADMIN PANEL + MANAJEMEN PRODUK (localStorage)
+  // ==============================================
+
+  const ADMIN_PASSWORD = "admin123"; // Ganti jika perlu
+
+  // Akses admin dengan Alt + A
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey && e.key === 'a') {
+      document.getElementById('adminBtn').style.display = 'block';
+    }
+  });
+
+  document.getElementById('adminBtn').onclick = () => {
+    document.getElementById('adminLoginModal').style.display = 'flex';
+  };
+
+  function closeAdminLogin() {
+    document.getElementById('adminLoginModal').style.display = 'none';
+    document.getElementById('adminPass').value = '';
+    document.getElementById('adminError').style.display = 'none';
+  }
+
+  function loginAdmin() {
+    const pass = document.getElementById('adminPass').value;
+    if (pass === ADMIN_PASSWORD) {
+      closeAdminLogin();
+      openAdminPanel();
+    } else {
+      document.getElementById('adminError').innerText = 'Password salah!';
+      document.getElementById('adminError').style.display = 'block';
+    }
+  }
+
+  function openAdminPanel() {
+    document.getElementById('adminPanelModal').style.display = 'flex';
+    listAllProducts();
+  }
+
+  function closeAdminPanel() {
+    document.getElementById('adminPanelModal').style.display = 'none';
+  }
+
+  function generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      const r = Math.random() * 16 | 0;
+      const v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  let colorCount = 0;
+  let isEditing = false;
+  let currentEditId = null;
+
+  function addColorField() {
+    colorCount++;
+    const div = document.createElement('div');
+    div.innerHTML = `
+      Warna <input type="text" placeholder="Nama warna" id="colorName${colorCount}" style="width:45%; padding:6px; margin:4px 5px 4px 0; border:1px solid #ccc; border-radius:4px;">
+      URL <input type="text" placeholder="URL gambar warna" id="colorImg${colorCount}" style="width:48%; padding:6px; margin:4px 0; border:1px solid #ccc; border-radius:4px;">
+    `;
+    document.getElementById('colorFields').appendChild(div);
+  }
+
+  function loadColorFields() {
+    colorCount = 0;
+    document.getElementById('colorFields').innerHTML = '';
+    addColorField();
+  }
+
+  function saveProduct() {
+    const name = document.getElementById('newProdName').value.trim();
+    const price = document.getElementById('newProdPrice').value.trim();
+    const desc = document.getElementById('newProdDesc').value.trim();
+    const category = document.getElementById('newProdCategory').value;
+    const mainImg = document.getElementById('newProdImg').value.trim();
+
+    if (!name || !price || !desc || !category || !mainImg) {
+      alert('Harap isi semua kolom wajib!');
+      return;
+    }
+
+    const colors = {};
+    for (let i = 1; i <= colorCount; i++) {
+      const colorName = document.getElementById(`colorName${i}`)?.value?.trim();
+      const colorImg = document.getElementById(`colorImg${i}`)?.value?.trim();
+      if (colorName && colorImg) {
+        colors[colorName] = colorImg;
+      }
+    }
+
+    if (Object.keys(colors).length === 0) {
+      alert('Harap tambahkan minimal 1 warna dengan URL gambarnya!');
+      return;
+    }
+
+    const products = JSON.parse(localStorage.getItem('customProducts') || '[]');
+
+    if (isEditing) {
+      const index = products.findIndex(p => p.id === currentEditId);
+      if (index !== -1) {
+        products[index] = { id: currentEditId, name, price, desc, category, mainImg, colors };
+      }
+    } else {
+      products.push({ id: generateUUID(), name, price, desc, category, mainImg, colors });
+    }
+
+    localStorage.setItem('customProducts', JSON.stringify(products));
+    alert(isEditing ? '✅ Produk berhasil diperbarui!' : '✅ Produk berhasil ditambahkan!');
+    listAllProducts();
+    renderCustomProducts();
+  }
+
+  function deleteProduct(productId) {
+    if (!confirm('Yakin ingin menghapus produk ini?')) return;
+    let products = JSON.parse(localStorage.getItem('customProducts') || '[]');
+    products = products.filter(p => p.id !== productId);
+    localStorage.setItem('customProducts', JSON.stringify(products));
+    alert('🗑️ Produk berhasil dihapus!');
+    listAllProducts();
+    renderCustomProducts();
+  }
+
+  function editProduct(id) {
+    const products = JSON.parse(localStorage.getItem('customProducts') || '[]');
+    const prod = products.find(p => p.id === id);
+    if (!prod) return;
+
+    isEditing = true;
+    currentEditId = id;
+
+    document.getElementById('newProdName').value = prod.name;
+    document.getElementById('newProdPrice').value = prod.price;
+    document.getElementById('newProdDesc').value = prod.desc;
+    document.getElementById('newProdCategory').value = prod.category;
+    document.getElementById('newProdImg').value = prod.mainImg;
+
+    colorCount = 0;
+    const colorFieldsDiv = document.getElementById('colorFields');
+    colorFieldsDiv.innerHTML = '';
+    Object.entries(prod.colors).forEach(([colorName, imgUrl]) => {
+      addColorField();
+      document.getElementById(`colorName${colorCount}`).value = colorName;
+      document.getElementById(`colorImg${colorCount}`).value = imgUrl;
+    });
+
+    document.getElementById('adminPanelModal').scrollTo({ top: 500, behavior: 'smooth' });
+  }
+
+  function listAllProducts() {
+    const container = document.getElementById('productList');
+    const products = JSON.parse(localStorage.getItem('customProducts') || '[]');
+
+    let html = '<h3>Daftar Produk Custom</h3><div style="max-height:200px; overflow-y:auto; margin:10px 0; border:1px solid #eee; padding:8px; border-radius:6px;">';
+    if (products.length === 0) {
+      html += '<p style="color:#999; text-align:center;">Belum ada produk custom.</p>';
+    } else {
+      products.forEach(p => {
+        html += `
+          <div style="padding:8px; border-bottom:1px dashed #ddd; display:flex; justify-content:space-between; align-items:center; font-size:13px;">
+            <div><strong>${p.name}</strong> (${p.category})</div>
+            <div>
+              <button onclick="editProduct('${p.id}')" style="margin-right:6px; padding:3px 6px; background:#3498db; color:white; border:none; border-radius:3px; font-size:11px;">Edit</button>
+              <button onclick="deleteProduct('${p.id}')" style="padding:3px 6px; background:#e74c3c; color:white; border:none; border-radius:3px; font-size:11px;">Hapus</button>
+            </div>
+          </div>
+        `;
+      });
+    }
+    html += '</div>';
+
+    html += `
+      <h3>${isEditing ? 'Edit Produk' : 'Tambah Produk Baru'}</h3>
+      <input type="text" id="newProdName" placeholder="Nama Produk" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
+      <input type="text" id="newProdPrice" placeholder="Harga (misal: Rp 100.000)" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
+      <input type="text" id="newProdDesc" placeholder="Deskripsi" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
+      <select id="newProdCategory" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
+        <option value="Pakaian">Pakaian</option>
+        <option value="Sepatu">Sepatu</option>
+        <option value="Tumbler">Tumbler</option>
+      </select>
+      <input type="text" id="newProdImg" placeholder="URL Gambar Utama" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
+      <div id="colorFields" style="margin-top:10px;"></div>
+      <button type="button" onclick="addColorField()" style="margin:5px 0; background:#f1f1f1; border:1px solid #ccc; padding:5px 10px; border-radius:4px; font-size:12px;">+ Tambah Warna</button>
+      <button onclick="saveProduct()" style="width:100%; margin-top:15px; padding:12px; background:${isEditing ? '#f39c12' : '#27ae60'}; color:white; border:none; border-radius:8px; cursor:pointer;">
+        ${isEditing ? '💾 Simpan Perubahan' : '✅ Tambah Produk'}
+      </button>
+      ${isEditing ? `<button onclick="cancelEdit()" style="width:100%; margin-top:8px; padding:10px; background:#95a5a6; color:white; border:none; border-radius:8px;">✕ Batal Edit</button>` : ''}
+    `;
+
+    container.innerHTML = html;
+    loadColorFields();
+  }
+
+  function cancelEdit() {
+    isEditing = false;
+    currentEditId = null;
+    listAllProducts();
+  }
+
+  function renderCustomProducts() {
+    document.querySelectorAll('.product-card.custom').forEach(el => el.remove());
+    const products = JSON.parse(localStorage.getItem('customProducts') || '[]');
+    const container = document.getElementById('productContainer');
+
+    products.forEach(prod => {
+      const card = document.createElement('div');
+      card.className = 'product-card custom';
+      card.setAttribute('data-name', prod.name);
+      card.setAttribute('data-category', prod.category);
+      card.onclick = () => openModal(prod.name, prod.price, prod.desc, prod.colors, '');
+      card.innerHTML = `
+        <div class="img-wrapper">
+          <img src="${prod.mainImg}" onerror="this.src='https://via.placeholder.com/300x250?text=${encodeURIComponent(prod.name)}'">
+        </div>
+        <div class="product-info">
+          <span class="category-text">${prod.category}</span>
+          <h3>${prod.name}</h3>
+          <div class="price-row">
+            <p class="price">${prod.price}</p>
+            <div class="action-btn">➔</div>
+          </div>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    // Gabungkan dengan produk bawaan untuk filter
+    const updatedAll = Array.from(document.getElementsByClassName("product-card"));
+    allProductElements.length = 0;
+    allProductElements.push(...updatedAll);
+    updateFilter();
+  }
+
+  window.addEventListener('load', () => {
+    renderCustomProducts();
+  });
+
+  // Expose fungsi ke global scope agar bisa dipanggil dari onclick
+  window.closeAdminLogin = closeAdminLogin;
+  window.loginAdmin = loginAdmin;
+  window.closeAdminPanel = closeAdminPanel;
+  window.addColorField = addColorField;
+  window.saveProduct = saveProduct;
+  window.deleteProduct = deleteProduct;
+  window.editProduct = editProduct;
+  window.cancelEdit = cancelEdit;
 </script>
 </body>
 </html>
