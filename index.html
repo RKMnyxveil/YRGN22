@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: ; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>YRGN22 STORE - Offline Mode</title>
   <style>
@@ -40,7 +40,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 15px;
     }
 
     .logo-container {
@@ -60,13 +59,11 @@
       border-radius: 8px;
     }
 
-    .store-title {
+    header h1 {
       margin: 0;
       font-size: 20px;
       font-weight: 700;
       letter-spacing: 1px;
-      text-align: center;
-      flex-grow: 1;
     }
 
     /* --- CONTROLS --- */
@@ -344,31 +341,6 @@
 
     /* --- RESPONSIVE --- */
     @media screen and (max-width: 600px) {
-      .sticky-nav {
-        padding: 10px 0;
-      }
-
-      header {
-        padding: 10px 15px;
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-      }
-
-      .logo-container {
-        justify-content: center;
-        order: 1;
-      }
-
-      .store-title {
-        order: 2;
-        font-size: 22px;
-        text-align: center;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-      }
-
       .controls input, .controls select { width: 100%; }
       .product-card { width: 100%; }
       .container { padding: 20px; }
@@ -402,8 +374,10 @@
     <header>
       <div class="logo-container">
         <img src="Logo/Logo Yrgn copy.png" alt="Logo" onerror="this.style.display='none'">
+        <div class="brand-outline">
+          <h1>YR STORE</h1>
+        </div>
       </div>
-      <h1 class="store-title brand-outline">YR STORE</h1>
     </header>
 
     <div class="controls">
