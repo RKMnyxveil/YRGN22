@@ -4,11 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: ; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';">
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>YRGN22 STORE - Cloudflare Sync</title>
+  <title>YRGN22 STORE - Offline Mode</title>
   <style>
-    /* === SAMA SEPERTI SEBELUMNYA === */
+    /* --- 1. RESET & BASIC --- */
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       margin: 0;
@@ -22,6 +22,7 @@
       -webkit-user-select: none;
     }
 
+    /* --- 2. STICKY NAV --- */
     .sticky-nav {
       position: sticky;
       top: 0;
@@ -65,6 +66,7 @@
       letter-spacing: 1px;
     }
 
+    /* --- CONTROLS --- */
     .controls {
       padding: 15px 20px 5px 20px;
       text-align: center;
@@ -86,12 +88,14 @@
     }
 
     .controls input { width: 320px; }
+    
     .controls input:focus, .controls select:focus {
       border-color: #3498db;
       background: #fff;
       box-shadow: 0 4px 15px rgba(52, 152, 219, 0.2);
     }
 
+    /* --- CONTAINER --- */
     .container {
       display: flex;
       flex-wrap: wrap;
@@ -102,6 +106,7 @@
       margin: 0 auto;
     }
 
+    /* --- 3. PRODUCT CARD (CLEAN) --- */
     .product-card {
       background: #ffffff;
       width: 280px;
@@ -196,6 +201,7 @@
       color: white;
     }
 
+    /* --- PAGINATION --- */
     .pagination-container {
       display: flex;
       justify-content: center;
@@ -234,6 +240,7 @@
       cursor: not-allowed;
     }
 
+    /* --- MODAL (POP UP) --- */
     .modal {
       display: none;
       position: fixed;
@@ -322,6 +329,7 @@
       background: #128C7E;
     }
 
+    /* --- FOOTER --- */
     .site-footer {
       background-color: #2c3e50;
       color: rgba(255,255,255,0.7);
@@ -331,15 +339,28 @@
       margin-top: auto;
     }
 
+    /* --- RESPONSIVE --- */
     @media screen and (max-width: 600px) {
       .controls input, .controls select { width: 100%; }
       .product-card { width: 100%; }
       .container { padding: 20px; }
-      .modal-content { padding: 20px; width: 95%; max-height: 90vh; }
-      .modal-content img { max-height: 200px; object-fit: contain; margin-bottom: 15px; }
+
+      .modal-content {
+        padding: 20px;
+        width: 95%;
+        max-height: 90vh;
+      }
+
+      .modal-content img {
+        max-height: 200px;
+        object-fit: contain;
+        margin-bottom: 15px;
+      }
+
       .modal-content h2 { font-size: 18px; }
       #modalPrice { font-size: 18px !important; }
       #modalDesc { font-size: 13px !important; }
+
       .select-box { padding: 8px; margin: 5px 0 10px 0; font-size: 14px; }
       label { font-size: 13px; }
       .buy-btn { margin-top: 15px; padding: 12px; }
@@ -370,7 +391,155 @@
     </div>
   </div>
 
-  <div class="container" id="productContainer"></div>
+  <div class="container" id="productContainer">
+
+    <!-- Produk Bawaan (Tetap Ada) -->
+    <div class="product-card" data-name="Kaos Polos" data-category="Pakaian" onclick="openModal('Kaos Polos','Rp 75.000','Bahan Cotton Combed 30s adem.',{'Hitam':'Barang/Hitam.png','Putih':'Barang/Putih.png'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Kaos+Polos'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Kaos Polos Premium</h3>
+        <div class="price-row"><p class="price">Rp 75.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Sneakers" data-category="Sepatu" onclick="openModal('Sepatu Sneakers','Rp 250.000','Sneakers kekinian.',{'Hitam':'Barang/celana.jpg','Putih':'Barang/Putih.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Sneakers'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Sneakers</h3>
+        <div class="price-row"><p class="price">Rp 250.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Sport" data-category="Sepatu" onclick="openModal('Sepatu Sport','Rp 300.000','Cocok untuk lari.',{'Biru':'Barang/Biru.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Sepatu+Sport'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Sport Run</h3>
+        <div class="price-row"><p class="price">Rp 300.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Kemeja Flanel" data-category="Pakaian" onclick="openModal('Kemeja Flanel','Rp 150.000','Motif kotak-kotak.',{'Merah':'Barang/Merah.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Flanel'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Kemeja Flanel</h3>
+        <div class="price-row"><p class="price">Rp 150.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Jaket Denim" data-category="Pakaian" onclick="openModal('Jaket Denim','Rp 200.000','Bahan Jeans Tebal.',{'Biru':'Barang/Biru.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Jaket+Denim'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Jaket Denim Classic</h3>
+        <div class="price-row"><p class="price">Rp 200.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Topi Baseball" data-category="Pakaian" onclick="openModal('Topi Baseball','Rp 50.000','All size.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Topi'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Topi Baseball NY</h3>
+        <div class="price-row"><p class="price">Rp 50.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Formal" data-category="Sepatu" onclick="openModal('Sepatu Formal','Rp 400.000','Kulit asli.',{'Coklat':'Barang/Coklat.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Pantofel'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Formal Pantofel</h3>
+        <div class="price-row"><p class="price">Rp 400.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Kaos Oversize" data-category="Pakaian" onclick="openModal('Kaos Oversize','Rp 85.000','Potongan longgar.',{'Putih':'Barang/Putih.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Oversize'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Kaos Oversize Street</h3>
+        <div class="price-row"><p class="price">Rp 85.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Celana Chino" data-category="Pakaian" onclick="openModal('Celana Chino','Rp 120.000','Bahan stretch.',{'Krem':'Barang/Krem.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Chino'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Celana Chino Slim</h3>
+        <div class="price-row"><p class="price">Rp 120.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Sandal" data-category="Sepatu" onclick="openModal('Sepatu Sandal','Rp 90.000','Sandal gunung kuat.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Sandal'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Sandal Outdoor</h3>
+        <div class="price-row"><p class="price">Rp 90.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Hoodie Polos" data-category="Pakaian" onclick="openModal('Hoodie Polos','Rp 175.000','Fleece tebal.',{'Abu':'Barang/Abu.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Hoodie'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Hoodie Jumper Polos</h3>
+        <div class="price-row"><p class="price">Rp 175.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Vest Rajut" data-category="Pakaian" onclick="openModal('Vest Rajut','Rp 60.000','Korean style.',{'Krem':'Barang/Krem.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Vest'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Vest Rajut Korea</h3>
+        <div class="price-row"><p class="price">Rp 60.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Celana Jeans" data-category="Pakaian" onclick="openModal('Celana Jeans','Rp 180.000','Slim fit.',{'Biru':'Barang/Biru.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Jeans'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Celana Jeans Pria</h3>
+        <div class="price-row"><p class="price">Rp 180.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Topi Kupluk" data-category="Pakaian" onclick="openModal('Topi Kupluk','Rp 45.000','Hangat dipakai.',{'Hitam':'Barang/Hitam.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Kupluk'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Topi Kupluk Beanie</h3>
+        <div class="price-row"><p class="price">Rp 45.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Sepatu Boots" data-category="Sepatu" onclick="openModal('Sepatu Boots','Rp 350.000','Kulit sintetis.',{'Coklat':'Barang/Coklat.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/celana.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Boots'"></div>
+      <div class="product-info">
+        <span class="category-text">Sepatu</span>
+        <h3>Sepatu Boots Klasik</h3>
+        <div class="price-row"><p class="price">Rp 350.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+    <div class="product-card" data-name="Jaket Bomber" data-category="Pakaian" onclick="openModal('Jaket Bomber','Rp 220.000','Anti angin.',{'Hijau':'Barang/Hijau.jpg'},'')">
+      <div class="img-wrapper"><img src="Barang/baju.jpg" onerror="this.src='https://via.placeholder.com/300x250?text=Bomber'"></div>
+      <div class="product-info">
+        <span class="category-text">Pakaian</span>
+        <h3>Jaket Bomber Army</h3>
+        <div class="price-row"><p class="price">Rp 220.000</p><div class="action-btn">➔</div></div>
+      </div>
+    </div>
+
+  </div>
+
   <div class="pagination-container" id="paginationControls"></div>
 
   <!-- MODAL PRODUK -->
@@ -381,6 +550,7 @@
       <h2 id="modalName"></h2>
       <p id="modalPrice" style="color:#27ae60; font-weight:bold; font-size:20px;"></p>
       <p id="modalDesc" style="color:#666; font-size:14px; line-height:1.5;"></p>
+      
       <div style="text-align:left; margin-top:20px;">
         <label>Pilih Warna:</label>
         <select id="colorSelect" class="select-box"></select>
@@ -389,23 +559,24 @@
           <option value="S">S</option><option value="M">M</option><option value="L">L</option><option value="XL">XL</option>
         </select>
       </div>
+
       <p id="confirmationText" style="margin:15px 0; font-size:13px; color:#555; background:#f0f2f5; padding:10px; border-radius:8px;"></p>
-      <a id="modalBuy" class="buy-btn" href="https://wa.me/6282223108015" target="_blank" rel="noopener noreferrer"> Beli via WhatsApp</a>
+      <a id="modalBuy" class="buy-btn" href="#" target="_blank" rel="noopener noreferrer"> Beli via WhatsApp</a>
     </div>
   </div>
 
-  <!-- LOGIN ADMIN -->
+  <!-- LOGIN ADMIN MODAL -->
   <div id="adminLoginModal" class="modal" style="display:none;">
     <div class="modal-content" style="max-width:400px;">
       <span class="close" onclick="closeAdminLogin()">&times;</span>
       <h2 style="text-align:center; margin-bottom:20px;">🔐 Login Admin</h2>
-      <input type="password" id="adminPass" placeholder="Password admin" style="width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px;">
-      <button onclick="loginAdmin()" style="width:100%; padding:12px; background:#2c3e50; color:white; border:none; border-radius:8px;">Masuk</button>
+      <input type="password" id="adminPass" placeholder="Masukkan password admin" style="width:100%; padding:12px; margin:10px 0; border:1px solid #ddd; border-radius:8px; box-sizing:border-box;">
+      <button onclick="loginAdmin()" style="width:100%; padding:12px; background:#2c3e50; color:white; border:none; border-radius:8px; cursor:pointer;">Masuk</button>
       <p id="adminError" style="color:#e74c3c; font-size:12px; text-align:center; margin-top:10px; display:none;"></p>
     </div>
   </div>
 
-  <!-- ADMIN PANEL -->
+  <!-- ADMIN PANEL MODAL -->
   <div id="adminPanelModal" class="modal" style="display:none;">
     <div class="modal-content" style="max-width:600px; max-height:85vh;">
       <span class="close" onclick="closeAdminPanel()">&times;</span>
@@ -413,29 +584,163 @@
     </div>
   </div>
 
+  <!-- TOMBOL ADMIN (TERSEMBUNYI) -->
   <button id="adminBtn" style="position:fixed; bottom:10px; right:10px; padding:8px 12px; font-size:12px; background:#e74c3c; color:white; border:none; border-radius:4px; cursor:pointer; display:none;">🔐 Admin</button>
 
   <footer class="site-footer">
-    <p>© <span id="year"></span> RIAN KIA MADO</p>
+    <div class="footer-content">
+      <p>© <span id="year"></span> RIAN KIA MADO</p>
+    </div>
   </footer>
 
 <script>
-  // === 🌐 KONFIGURASI CLOUDFLARE WORKER ===
-  const WORKER_URL = "/api"; // ✅ GANTI DENGAN URL WORKER ANDA! -->
+  // 1. Update Tahun Otomatis di Footer
+  document.getElementById("year").textContent = new Date().getFullYear();
+
+  // [KEAMANAN] Blokir Tombol Developer Tools
+  document.onkeydown = function(e) {
+    if(event.keyCode == 123) { return false; }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { return false; }
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) { return false; } 
+    if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { return false; } 
+    if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { return false; }
+  }
+
+  // 2. Konfigurasi Halaman (Pagination)
+  const ITEMS_PER_PAGE = 12; 
+  let currentPage = 1;
+  let filteredProducts = []; 
   
+  const allProductElements = Array.from(document.getElementsByClassName("product-card"));
+
+  window.onload = function() {
+    updateFilter(); 
+  };
+
+  function sanitizeInput(str) {
+    const temp = document.createElement('div');
+    temp.textContent = str;
+    return temp.innerHTML;
+  }
+
+  function updateFilter() {
+    let rawInput = document.getElementById("searchInput").value;
+    const searchInput = sanitizeInput(rawInput).toLowerCase();
+    const categorySelect = document.getElementById("categorySelect").value;
+
+    filteredProducts = allProductElements.filter(card => {
+      const name = card.getAttribute("data-name").toLowerCase();
+      const category = card.getAttribute("data-category");
+      const matchSearch = name.includes(searchInput);
+      const matchCategory = categorySelect === "all" || category === categorySelect;
+      return matchSearch && matchCategory;
+    });
+
+    currentPage = 1;
+    renderPagination();
+  }
+
+  function renderPagination() {
+    const totalItems = filteredProducts.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    allProductElements.forEach(el => el.style.display = "none");
+
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const itemsToShow = filteredProducts.slice(startIndex, endIndex);
+
+    itemsToShow.forEach(el => el.style.display = "flex");
+
+    const paginationContainer = document.getElementById("paginationControls");
+    paginationContainer.innerHTML = ""; 
+
+    if (totalPages > 1) {
+      const prevBtn = document.createElement("button");
+      prevBtn.innerText = "« Prev";
+      prevBtn.className = "page-btn";
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => changePage(currentPage - 1);
+      paginationContainer.appendChild(prevBtn);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+        btn.onclick = () => changePage(i);
+        paginationContainer.appendChild(btn);
+      }
+
+      const nextBtn = document.createElement("button");
+      nextBtn.innerText = "Next »";
+      nextBtn.className = "page-btn";
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => changePage(currentPage + 1);
+      paginationContainer.appendChild(nextBtn);
+    }
+    
+    if (totalItems === 0) {
+      paginationContainer.innerHTML = "<p style='color:#999; font-style:italic;'>Produk tidak ditemukan.</p>";
+    }
+  }
+
+  function changePage(pageNum) {
+    currentPage = pageNum;
+    renderPagination();
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+  }
+
+  // 3. FUNGSI MODAL PRODUK
+  function openModal(name, price, desc, images, linkBase) {
+    document.getElementById("modalName").innerText = name;
+    document.getElementById("modalPrice").innerText = price;
+    document.getElementById("modalDesc").innerText = desc;
+
+    const colorSelect = document.getElementById("colorSelect");
+    colorSelect.innerHTML = "";
+    Object.keys(images).forEach(color => {
+      const option = document.createElement("option");
+      option.value = color;
+      option.text = color;
+      colorSelect.appendChild(option);
+    });
+    
+    if(Object.keys(images).length > 0) colorSelect.value = Object.keys(images)[0];
+
+    function updatePreview() {
+      const color = colorSelect.value;
+      const size = document.getElementById("sizeSelect").value;
+      const imageUrl = images[color] || 'https://via.placeholder.com/300';
+      document.getElementById("modalImage").src = imageUrl;
+      document.getElementById("confirmationText").innerText = `Pilihan: Warna ${color}, Ukuran ${size}`;
+      
+      let finalLink = linkBase ? linkBase : "https://wa.me/6282223108015?text=";
+      if(!finalLink.includes("text=")) finalLink += "&text=";
+      const message = `Halo Admin YR STORE,\nSaya tertarik membeli:\n------------------\nNama: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}\n------------------\nMohon info stok dan ongkir.`;
+      document.getElementById("modalBuy").href = finalLink + encodeURIComponent(message);
+    }
+
+    colorSelect.onchange = updatePreview;
+    document.getElementById("sizeSelect").onchange = updatePreview;
+    updatePreview();
+    document.getElementById("productModal").style.display = "flex";
+  }
+
+  function closeModal() {
+    document.getElementById("productModal").style.display = "none";
+  }
+  
+  window.onclick = function(event) {
+    if (event.target == document.getElementById("productModal")) closeModal();
+  }
+
+  // ==============================================
+  // ✅ ADMIN PANEL + MANAJEMEN PRODUK (DENGAN FILE GAMBAR)
+  // ==============================================
+
   const ADMIN_PASSWORD = "admin123";
 
-  // === INISIALISASI ===
-  document.getElementById("year").textContent = new Date().getFullYear();
-  const ITEMS_PER_PAGE = 12;
-  let currentPage = 1;
-  let filteredProducts = [];
-  let allProductElements = [];
-  let colorCount = 0;
-  let isEditing = false;
-  let currentEditId = null;
-
-  // === AKSES ADMIN ===
+  // Akses admin dengan Alt + A
   document.addEventListener('keydown', (e) => {
     if (e.altKey && e.key === 'a') {
       document.getElementById('adminBtn').style.display = 'block';
@@ -463,160 +768,6 @@
     }
   }
 
-  // === FUNGSI TOKO (tidak berubah) ===
-  function sanitizeInput(str) {
-    const temp = document.createElement('div');
-    temp.textContent = str;
-    return temp.innerHTML;
-  }
-
-  function updateFilter() {
-    let rawInput = document.getElementById("searchInput").value;
-    const searchInput = sanitizeInput(rawInput).toLowerCase();
-    const categorySelect = document.getElementById("categorySelect").value;
-
-    filteredProducts = allProductElements.filter(card => {
-      const name = card.getAttribute("data-name").toLowerCase();
-      const category = card.getAttribute("data-category");
-      return name.includes(searchInput) && (categorySelect === "all" || category === categorySelect);
-    });
-
-    currentPage = 1;
-    renderPagination();
-  }
-
-  function renderPagination() {
-    const totalItems = filteredProducts.length;
-    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
-    allProductElements.forEach(el => el.style.display = "none");
-
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const itemsToShow = filteredProducts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-    itemsToShow.forEach(el => el.style.display = "flex");
-
-    const container = document.getElementById("paginationControls");
-    container.innerHTML = "";
-
-    if (totalPages > 1) {
-      const prev = document.createElement("button");
-      prev.innerText = "« Prev";
-      prev.className = "page-btn";
-      prev.disabled = currentPage === 1;
-      prev.onclick = () => changePage(currentPage - 1);
-      container.appendChild(prev);
-
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement("button");
-        btn.innerText = i;
-        btn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-        btn.onclick = () => changePage(i);
-        container.appendChild(btn);
-      }
-
-      const next = document.createElement("button");
-      next.innerText = "Next »";
-      next.className = "page-btn";
-      next.disabled = currentPage === totalPages;
-      next.onclick = () => changePage(currentPage + 1);
-      container.appendChild(next);
-    }
-
-    if (totalItems === 0) {
-      container.innerHTML = "<p style='color:#999; font-style:italic;'>Produk tidak ditemukan.</p>";
-    }
-  }
-
-  function changePage(pageNum) {
-    currentPage = pageNum;
-    renderPagination();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function openModal(name, price, desc, images) {
-    document.getElementById("modalName").innerText = name;
-    document.getElementById("modalPrice").innerText = price;
-    document.getElementById("modalDesc").innerText = desc;
-
-    const colorSelect = document.getElementById("colorSelect");
-    colorSelect.innerHTML = "";
-    Object.keys(images).forEach(color => {
-      const opt = document.createElement("option");
-      opt.value = color;
-      opt.text = color;
-      colorSelect.appendChild(opt);
-    });
-    if (Object.keys(images).length > 0) colorSelect.value = Object.keys(images)[0];
-
-    function updatePreview() {
-      const color = colorSelect.value;
-      const size = document.getElementById("sizeSelect").value;
-      document.getElementById("modalImage").src = images[color] || 'https://via.placeholder.com/300';
-      document.getElementById("confirmationText").innerText = `Pilihan: Warna ${color}, Ukuran ${size}`;
-
-      const message = `Halo Admin YR STORE,\nSaya tertarik membeli:\n------------------\nNama: ${name}\nHarga: ${price}\nWarna: ${color}\nUkuran: ${size}\n------------------\nMohon info stok dan ongkir.`;
-      document.getElementById("modalBuy").href = `https://wa.me/6282223108015?text=${encodeURIComponent(message)}`;
-    }
-
-    colorSelect.onchange = updatePreview;
-    document.getElementById("sizeSelect").onchange = updatePreview;
-    updatePreview();
-    document.getElementById("productModal").style.display = "flex";
-  }
-
-  function closeModal() {
-    document.getElementById("productModal").style.display = "none";
-  }
-
-  window.onclick = (e) => {
-    if (e.target.id === "productModal") closeModal();
-  };
-
-  // ✅ ✅ ✅ INTEGRASI CLOUDFLARE WORKER ✅ ✅ ✅
-  async function syncToWorker(products) {
-    try {
-      const response = await fetch(WORKER_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(products)
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        if (data.gist_id) {
-          localStorage.setItem('GIST_ID', data.gist_id);
-        }
-        return true;
-      } else {
-        console.error("Error dari Worker:", data);
-        alert("⚠️ Gagal simpan ke server: " + (data.error || "Kesalahan tidak dikenal"));
-        return false;
-      }
-    } catch (err) {
-      console.error("Gagal terhubung ke Worker:", err);
-      alert("⚠️ Tidak bisa terhubung ke server. Periksa koneksi internet.");
-      return false;
-    }
-  }
-
-  async function loadFromWorker() {
-    try {
-      const response = await fetch(WORKER_URL);
-      if (!response.ok) {
-        throw new Error("Server merespons dengan error");
-      }
-      const products = await response.json();
-      localStorage.setItem('customProducts', JSON.stringify(products));
-      return true;
-    } catch (err) {
-      console.warn("Gagal muat dari Worker:", err);
-      return false;
-    }
-  }
-
-  // === ADMIN PANEL (tidak berubah, kecuali sync) ===
   function openAdminPanel() {
     document.getElementById('adminPanelModal').style.display = 'flex';
     listAllProducts();
@@ -627,20 +778,30 @@
   }
 
   function generateUUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       const r = Math.random() * 16 | 0;
-      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+      const v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
     });
   }
 
+  // Fungsi: baca file → data URL
   function readFileAsDataURL(file) {
-    return new Promise((resolve) => {
-      if (!file) { resolve(''); return; }
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        resolve('');
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
       reader.readAsDataURL(file);
     });
   }
+
+  let colorCount = 0;
+  let isEditing = false;
+  let currentEditId = null;
 
   function addColorField() {
     colorCount++;
@@ -650,11 +811,12 @@
         <input type="text" placeholder="Nama warna" id="colorName${colorCount}" style="width:100%; padding:6px; margin-bottom:6px; border:1px solid #ccc; border-radius:4px;">
         <label style="display:block; margin-bottom:4px; font-size:12px;">Gambar Warna:</label>
         <input type="file" id="colorImgFile${colorCount}" accept="image/*" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px;">
-        <img id="colorPreview${colorCount}" src="" style="max-width:100%; max-height:100px; margin-top:6px; display:none; border-radius:4px;">
+        <img id="colorPreview${colorCount}" src="" alt="Preview" style="max-width:100%; max-height:100px; margin-top:6px; display:none; border-radius:4px;">
       </div>
     `;
     document.getElementById('colorFields').appendChild(div);
 
+    // Preview untuk warna
     const fileInput = document.getElementById(`colorImgFile${colorCount}`);
     const preview = document.getElementById(`colorPreview${colorCount}`);
     if (fileInput && preview) {
@@ -691,6 +853,7 @@
     }
 
     const mainImgData = await readFileAsDataURL(mainFile);
+
     const colors = {};
     for (let i = 1; i <= colorCount; i++) {
       const colorName = document.getElementById(`colorName${i}`)?.value?.trim();
@@ -707,6 +870,7 @@
     }
 
     const products = JSON.parse(localStorage.getItem('customProducts') || '[]');
+
     if (isEditing) {
       const index = products.findIndex(p => p.id === currentEditId);
       if (index !== -1) {
@@ -717,31 +881,20 @@
     }
 
     localStorage.setItem('customProducts', JSON.stringify(products));
-
-    // ✅ SIMPAN KE CLOUDFLARE WORKER (AMAN!)
-    const success = await syncToWorker(products);
-    if (success) {
-      alert(isEditing ? '✅ Produk diperbarui & disinkronkan!' : '✅ Produk ditambahkan & disinkronkan!');
-    }
-
+    alert(isEditing ? '✅ Produk diperbarui!' : '✅ Produk ditambahkan!');
     listAllProducts();
     renderCustomProducts();
   }
 
-  async function deleteProduct(productId) {
+  function deleteProduct(productId) {
     if (!confirm('Yakin ingin menghapus produk ini?')) return;
     let products = JSON.parse(localStorage.getItem('customProducts') || '[]');
     products = products.filter(p => p.id !== productId);
     localStorage.setItem('customProducts', JSON.stringify(products));
-
-    const success = await syncToWorker(products);
-    if (success) alert('🗑️ Produk dihapus & disinkronkan!');
-    
+    alert('🗑️ Produk berhasil dihapus!');
     listAllProducts();
     renderCustomProducts();
   }
-
-  // ... (fungsi editProduct, cancelEdit, listAllProducts, renderCustomProducts tetap sama)
 
   function editProduct(id) {
     const products = JSON.parse(localStorage.getItem('customProducts') || '[]');
@@ -750,19 +903,23 @@
 
     isEditing = true;
     currentEditId = id;
+
     document.getElementById('newProdName').value = prod.name;
     document.getElementById('newProdPrice').value = prod.price;
     document.getElementById('newProdDesc').value = prod.desc;
     document.getElementById('newProdCategory').value = prod.category;
 
+    // Preview gambar utama
     const mainPreview = document.getElementById('mainImgPreview');
     if (mainPreview) {
       mainPreview.src = prod.mainImg;
       mainPreview.style.display = 'block';
     }
 
+    // Isi warna
     colorCount = 0;
-    document.getElementById('colorFields').innerHTML = '';
+    const colorFieldsDiv = document.getElementById('colorFields');
+    colorFieldsDiv.innerHTML = '';
     Object.entries(prod.colors).forEach(([colorName, imgUrl]) => {
       addColorField();
       document.getElementById(`colorName${colorCount}`).value = colorName;
@@ -772,6 +929,7 @@
         preview.style.display = 'block';
       }
     });
+
     document.getElementById('adminPanelModal').scrollTo({ top: 500, behavior: 'smooth' });
   }
 
@@ -785,14 +943,14 @@
     const container = document.getElementById('productList');
     const products = JSON.parse(localStorage.getItem('customProducts') || '[]');
 
-    let html = '<h3>Produk Custom</h3><div style="max-height:200px; overflow-y:auto; margin:10px 0; border:1px solid #eee; padding:8px; border-radius:6px;">';
+    let html = '<h3>Daftar Produk Custom</h3><div style="max-height:200px; overflow-y:auto; margin:10px 0; border:1px solid #eee; padding:8px; border-radius:6px;">';
     if (products.length === 0) {
-      html += '<p style="color:#999; text-align:center;">Belum ada produk.</p>';
+      html += '<p style="color:#999; text-align:center;">Belum ada produk custom.</p>';
     } else {
       products.forEach(p => {
         html += `
           <div style="padding:8px; border-bottom:1px dashed #ddd; display:flex; justify-content:space-between; align-items:center; font-size:13px;">
-            <div><strong>${p.name}</strong></div>
+            <div><strong>${p.name}</strong> (${p.category})</div>
             <div>
               <button onclick="editProduct('${p.id}')" style="margin-right:6px; padding:3px 6px; background:#3498db; color:white; border:none; border-radius:3px; font-size:11px;">Edit</button>
               <button onclick="deleteProduct('${p.id}')" style="padding:3px 6px; background:#e74c3c; color:white; border:none; border-radius:3px; font-size:11px;">Hapus</button>
@@ -804,37 +962,43 @@
     html += '</div>';
 
     html += `
-      <h3>${isEditing ? 'Edit Produk' : 'Tambah Produk'}</h3>
-      <input type="text" id="newProdName" placeholder="Nama" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
-      <input type="text" id="newProdPrice" placeholder="Harga" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
+      <h3>${isEditing ? 'Edit Produk' : 'Tambah Produk Baru'}</h3>
+      <input type="text" id="newProdName" placeholder="Nama Produk" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
+      <input type="text" id="newProdPrice" placeholder="Harga (misal: Rp 100.000)" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
       <input type="text" id="newProdDesc" placeholder="Deskripsi" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
       <select id="newProdCategory" style="width:100%; padding:10px; margin:8px 0; border:1px solid #ccc; border-radius:6px;">
         <option value="Pakaian">Pakaian</option>
         <option value="Sepatu">Sepatu</option>
         <option value="Tumbler">Tumbler</option>
       </select>
-      <label>Gambar Utama</label>
+
+      <label style="display:block; margin:8px 0 4px 0; font-size:13px;">Gambar Utama (Pilih File)</label>
       <input type="file" id="newProdImgFile" accept="image/*" style="width:100%; padding:6px; border:1px solid #ccc; border-radius:4px;">
-      <img id="mainImgPreview" src="" style="max-width:100%; max-height:150px; margin:8px 0; display:none; border-radius:6px;">
+      <img id="mainImgPreview" src="" alt="Preview" style="max-width:100%; max-height:150px; margin:8px 0; display:none; border-radius:6px;">
+
       <div id="colorFields" style="margin-top:15px;"></div>
-      <button type="button" onclick="addColorField()" style="margin:5px 0; background:#f1f1f1; border:1px solid #ccc; padding:5px 10px; border-radius:4px; font-size:12px;">+ Warna</button>
-      <button onclick="saveProduct()" style="width:100%; margin-top:15px; padding:12px; background:${isEditing ? '#f39c12' : '#27ae60'}; color:white; border:none; border-radius:8px;">${isEditing ? 'Simpan' : 'Tambah'}</button>
-      ${isEditing ? `<button onclick="cancelEdit()" style="width:100%; margin-top:8px; padding:10px; background:#95a5a6; color:white; border:none; border-radius:8px;">Batal</button>` : ''}
+      <button type="button" onclick="addColorField()" style="margin:5px 0; background:#f1f1f1; border:1px solid #ccc; padding:5px 10px; border-radius:4px; font-size:12px;">+ Tambah Warna</button>
+
+      <button onclick="saveProduct()" style="width:100%; margin-top:15px; padding:12px; background:${isEditing ? '#f39c12' : '#27ae60'}; color:white; border:none; border-radius:8px; cursor:pointer;">
+        ${isEditing ? '💾 Simpan Perubahan' : '✅ Tambah Produk'}
+      </button>
+      ${isEditing ? `<button onclick="cancelEdit()" style="width:100%; margin-top:8px; padding:10px; background:#95a5a6; color:white; border:none; border-radius:8px;">✕ Batal Edit</button>` : ''}
     `;
 
     container.innerHTML = html;
     loadColorFields();
 
-    const mainInput = document.getElementById('newProdImgFile');
-    const preview = document.getElementById('mainImgPreview');
-    if (mainInput && preview) {
-      mainInput.onchange = () => {
-        const file = mainInput.files[0];
+    // Preview gambar utama
+    const mainFileInput = document.getElementById('newProdImgFile');
+    const mainPreview = document.getElementById('mainImgPreview');
+    if (mainFileInput && mainPreview) {
+      mainFileInput.onchange = () => {
+        const file = mainFileInput.files[0];
         if (file) {
           const reader = new FileReader();
           reader.onload = () => {
-            preview.src = reader.result;
-            preview.style.display = 'block';
+            mainPreview.src = reader.result;
+            mainPreview.style.display = 'block';
           };
           reader.readAsDataURL(file);
         }
@@ -852,7 +1016,7 @@
       card.className = 'product-card custom';
       card.setAttribute('data-name', prod.name);
       card.setAttribute('data-category', prod.category);
-      card.onclick = () => openModal(prod.name, prod.price, prod.desc, prod.colors);
+      card.onclick = () => openModal(prod.name, prod.price, prod.desc, prod.colors, '');
       card.innerHTML = `
         <div class="img-wrapper">
           <img src="${prod.mainImg}" onerror="this.src='https://via.placeholder.com/300x250?text=${encodeURIComponent(prod.name)}'">
@@ -869,21 +1033,17 @@
       container.appendChild(card);
     });
 
-    allProductElements = Array.from(document.getElementsByClassName("product-card"));
+    const updatedAll = Array.from(document.getElementsByClassName("product-card"));
+    allProductElements.length = 0;
+    allProductElements.push(...updatedAll);
     updateFilter();
   }
 
-  // === INISIALISASI AWAL ===
-  (async () => {
-    // ✅ MUAT DATA DARI CLOUDFLARE WORKER
-    const loaded = await loadFromWorker();
-    if (!loaded) {
-      console.log("Menggunakan data lokal.");
-    }
+  window.addEventListener('load', () => {
     renderCustomProducts();
-  })();
+  });
 
-  // === EXPOSE FUNGSI ===
+  // Expose ke global
   window.closeAdminLogin = closeAdminLogin;
   window.loginAdmin = loginAdmin;
   window.closeAdminPanel = closeAdminPanel;
@@ -892,7 +1052,6 @@
   window.deleteProduct = deleteProduct;
   window.editProduct = editProduct;
   window.cancelEdit = cancelEdit;
-  window.closeModal = closeModal;
 </script>
 </body>
 </html>
